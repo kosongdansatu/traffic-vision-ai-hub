@@ -13,7 +13,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const username = "Demo User";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-dark">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <div
         className={`transition-all duration-300 ${

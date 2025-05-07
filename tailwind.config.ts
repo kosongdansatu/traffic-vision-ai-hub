@@ -91,11 +91,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'gradient-flow': {
+					'0%, 100%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'gradient-flow': 'gradient-flow 15s ease infinite'
+			},
+			backgroundImage: {
+				'hero-pattern': 'linear-gradient(to bottom right, rgba(46, 16, 101, 0.8) 0%, rgba(71, 30, 135, 0.8) 100%), url("/lovable-uploads/93bef3c4-d1e6-4ebe-8a82-b2ceda52f397.png")',
+				'gradient-dark': 'linear-gradient(to bottom right, rgba(46, 16, 101, 1), rgba(71, 30, 135, 1))',
+				'glass-card': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))'
 			}
 		}
 	},
