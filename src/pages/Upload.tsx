@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -8,15 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { UploadCloud } from "lucide-react";
+import { UploadCloud, Info } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { videoService } from "@/services/api";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [videoName, setVideoName] = useState("");
   const [description, setDescription] = useState("");
+  const [modelSize, setModelSize] = useState("nano");
   const [uploadProgress, setUploadProgress] = useState(0);
   const navigate = useNavigate();
 
@@ -43,6 +45,14 @@ const Upload = () => {
         toast.error("Please select a valid video file.");
         return;
       }
+      
+      // Check file size (max 200MB)
+      const maxSize = 200 * 1024 * 1024; // 200MB in bytes
+      if (selectedFile.size > maxSize) {
+        toast.error(`File is too large. Maximum size is 200MB. Your file is ${(selectedFile.size / (1024 * 1024)).toFixed(2)}MB.`);
+        return;
+      }
+      
       setFile(selectedFile);
       
       // Auto-fill the name field with the file name (without extension)
@@ -68,6 +78,7 @@ const Upload = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("name", videoName);
+    formData.append("model_size", modelSize);
     if (description) {
       formData.append("description", description);
     }
@@ -131,6 +142,40 @@ const Upload = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-1.5">
+                  <div className="flex items-center space-x-2">
+                    <Label htmlFor="modelSize">AI Model Size</Label>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Larger models are more accurate but take longer to process. 
+                            Choose 'nano' for faster results or 'medium'/'large' for better accuracy.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <Select 
+                    value={modelSize} 
+                    onValueChange={setModelSize}
+                    disabled={isUploading}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select model size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="nano">Nano (Fast, Basic Accuracy)</SelectItem>
+                      <SelectItem value="small">Small (Balanced)</SelectItem>
+                      <SelectItem value="medium">Medium (Better Accuracy)</SelectItem>
+                      <SelectItem value="large">Large (High Accuracy, Slower)</SelectItem>
+                      <SelectItem value="x-large">X-Large (Highest Accuracy, Very Slow)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="video">Video File</Label>
                   {!file && !isUploading ? (
                     <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-input p-8 hover:bg-muted/50 cursor-pointer" onClick={() => document.getElementById("video")?.click()}>
@@ -139,7 +184,7 @@ const Upload = () => {
                         Drag and drop your video here, or click to browse
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Supports: MP4, AVI, MOV, WEBM (Max 500MB)
+                        Supports: MP4, AVI, MOV, WEBM (Max 200MB)
                       </p>
                       <Input 
                         id="video" 

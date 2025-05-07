@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -83,6 +82,9 @@ const VideoDetail = () => {
       }));
   }, [results]);
   
+  // API URL for streams
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  
   if (isLoadingVideo) {
     return (
       <DashboardLayout>
@@ -130,8 +132,13 @@ const VideoDetail = () => {
               <div className="aspect-video bg-muted relative">
                 {video.status === "completed" && video.result_path ? (
                   <div className="flex items-center justify-center h-full bg-gray-900">
-                    {/* In a real app, we would show the processed video here */}
-                    <p className="text-white">Processed video available</p>
+                    <video 
+                      className="w-full h-full" 
+                      controls 
+                      src={`${apiUrl}/${video.result_path}`}
+                    >
+                      Your browser does not support the video tag.
+                    </video>
                   </div>
                 ) : video.status === "processing" ? (
                   <div className="flex items-center justify-center h-full bg-gray-900">
@@ -158,14 +165,16 @@ const VideoDetail = () => {
                     <Download className="mr-2 h-4 w-4" />
                     Download Processed Video
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    disabled={video.status !== "completed"}
-                  >
-                    <Eye className="mr-2 h-4 w-4" />
-                    Preview
-                  </Button>
+                  {video.file_path && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => window.open(`${apiUrl}/${video.file_path}`, '_blank')}
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      View Original
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card>
@@ -342,6 +351,12 @@ const VideoDetail = () => {
                           <dt className="font-medium">Vehicle density:</dt>
                           <dd>{results.processing_stats.vehicle_density.toFixed(2)} vehicles/frame</dd>
                         </div>
+                        {results.processing_stats.processing_time_seconds && (
+                          <div className="flex justify-between">
+                            <dt className="font-medium">Processing time:</dt>
+                            <dd>{results.processing_stats.processing_time_seconds.toFixed(2)}s</dd>
+                          </div>
+                        )}
                       </>
                     )}
                     <div className="flex justify-between">
@@ -356,6 +371,12 @@ const VideoDetail = () => {
                       <dt className="font-medium">Resolution:</dt>
                       <dd>{results.resolution}</dd>
                     </div>
+                    {results.model_used && (
+                      <div className="flex justify-between">
+                        <dt className="font-medium">AI Model used:</dt>
+                        <dd className="capitalize">{results.model_used}</dd>
+                      </div>
+                    )}
                   </dl>
                 </CardContent>
                 <CardFooter>

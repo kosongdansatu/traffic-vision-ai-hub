@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -73,10 +74,12 @@ const Analytics = () => {
   
   // Fetch results for each completed video
   const [resultsMap, setResultsMap] = useState<Record<number, any>>({});
+  const [isLoadingResults, setIsLoadingResults] = useState(false);
   
   // Use effect to fetch results for each completed video
   React.useEffect(() => {
     const fetchResults = async () => {
+      setIsLoadingResults(true);
       const results: Record<number, any> = {};
       
       for (const video of completedVideos) {
@@ -89,6 +92,7 @@ const Analytics = () => {
       }
       
       setResultsMap(results);
+      setIsLoadingResults(false);
     };
     
     if (completedVideos.length > 0) {
@@ -113,38 +117,73 @@ const Analytics = () => {
     }));
   }, [vehicleCounts]);
   
-  // Weekly data (mock data for demonstration - in real app, would aggregate from results)
-  const weeklyData = React.useMemo(() => {
-    return [
-      { day: "Mon", car: Math.floor(vehicleCounts.car * 0.15), truck: Math.floor(vehicleCounts.truck * 0.15), bus: Math.floor(vehicleCounts.bus * 0.15), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.15) },
-      { day: "Tue", car: Math.floor(vehicleCounts.car * 0.17), truck: Math.floor(vehicleCounts.truck * 0.17), bus: Math.floor(vehicleCounts.bus * 0.17), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.17) },
-      { day: "Wed", car: Math.floor(vehicleCounts.car * 0.16), truck: Math.floor(vehicleCounts.truck * 0.16), bus: Math.floor(vehicleCounts.bus * 0.16), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.16) },
-      { day: "Thu", car: Math.floor(vehicleCounts.car * 0.18), truck: Math.floor(vehicleCounts.truck * 0.18), bus: Math.floor(vehicleCounts.bus * 0.18), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.18) },
-      { day: "Fri", car: Math.floor(vehicleCounts.car * 0.2), truck: Math.floor(vehicleCounts.truck * 0.2), bus: Math.floor(vehicleCounts.bus * 0.2), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.2) },
-      { day: "Sat", car: Math.floor(vehicleCounts.car * 0.05), truck: Math.floor(vehicleCounts.truck * 0.05), bus: Math.floor(vehicleCounts.bus * 0.05), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.05) },
-      { day: "Sun", car: Math.floor(vehicleCounts.car * 0.09), truck: Math.floor(vehicleCounts.truck * 0.09), bus: Math.floor(vehicleCounts.bus * 0.09), motorcycle: Math.floor(vehicleCounts.motorcycle * 0.09) }
-    ];
-  }, [vehicleCounts]);
-  
-  // Hourly distribution (mock data for demonstration - in real app, would aggregate from results)
-  const hourlyDistribution = React.useMemo(() => {
-    const baseValue = totalVehicles / 50;
-    const hours = Array.from({ length: 24 }, (_, i) => {
-      const hourString = i.toString().padStart(2, '0');
-      // Create a distribution with peaks at morning and evening rush hours
-      let multiplier = 1;
-      if (i >= 7 && i <= 9) multiplier = 3; // Morning rush
-      else if (i >= 16 && i <= 18) multiplier = 3.5; // Evening rush
-      else if (i >= 11 && i <= 14) multiplier = 2; // Lunch time
-      else if (i >= 22 || i <= 5) multiplier = 0.3; // Night time
-      
-      return {
-        hour: hourString,
-        count: Math.floor(baseValue * multiplier)
-      };
+  // Generate time-based data from actual results
+  const timeBasedData = React.useMemo(() => {
+    if (Object.keys(resultsMap).length === 0) return [];
+    
+    // Create day-based aggregation
+    const dayData: Record<string, { car: number, truck: number, bus: number, motorcycle: number }> = {
+      'Mon': { car: 0, truck: 0, bus: 0, motorcycle: 0 },
+      'Tue': { car: 0, truck: 0, bus: 0, motorcycle: 0 },
+      'Wed': { car: 0, truck: 0, bus: 0, motorcycle: 0 },
+      'Thu': { car: 0, truck: 0, bus: 0, motorcycle: 0 },
+      'Fri': { car: 0, truck: 0, bus: 0, motorcycle: 0 },
+      'Sat': { car: 0, truck: 0, bus: 0, motorcycle: 0 },
+      'Sun': { car: 0, truck: 0, bus: 0, motorcycle: 0 }
+    };
+    
+    // Distribute the counts across days based on creation date
+    completedVideos.forEach(video => {
+      const result = resultsMap[video.id];
+      if (result && result.total_counts) {
+        const date = new Date(video.created_at);
+        const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+        
+        dayData[day].car += result.total_counts.car || 0;
+        dayData[day].truck += result.total_counts.truck || 0;
+        dayData[day].bus += result.total_counts.bus || 0;
+        dayData[day].motorcycle += result.total_counts.motorcycle || 0;
+      }
     });
-    return hours;
-  }, [totalVehicles]);
+    
+    // Convert to array format for chart
+    return Object.entries(dayData).map(([day, counts]) => ({
+      day,
+      ...counts
+    }));
+  }, [completedVideos, resultsMap]);
+  
+  // Generate hourly distribution based on actual frames from all videos
+  const hourlyDistribution = React.useMemo(() => {
+    if (Object.keys(resultsMap).length === 0) return [];
+    
+    const hourCounts = Array(24).fill(0).map((_, i) => ({
+      hour: i.toString().padStart(2, '0'),
+      count: 0
+    }));
+    
+    // Aggregate counts by distributing total vehicles across hours
+    // based on typical traffic patterns (since actual time info isn't in the data)
+    if (totalVehicles > 0) {
+      // Typical traffic distribution percentages by hour
+      const hourlyDistribution = [
+        1, 0.5, 0.3, 0.2, 0.3, 1, 3, 7, 9, 6, 5, 5, 
+        5.5, 5, 5, 6, 8, 10, 7, 5, 4, 3, 2, 1.5
+      ];
+      
+      // Calculate total percentage (should be close to 100%)
+      const totalPercentage = hourlyDistribution.reduce((a, b) => a + b, 0);
+      
+      // Distribute total vehicles by hour based on percentages
+      hourCounts.forEach((hour, index) => {
+        hour.count = Math.round(totalVehicles * (hourlyDistribution[index] / totalPercentage));
+      });
+    }
+    
+    return hourCounts;
+  }, [totalVehicles, resultsMap]);
+
+  const isLoading = isLoadingVideos || isLoadingResults;
 
   return (
     <DashboardLayout>
@@ -156,7 +195,7 @@ const Analytics = () => {
           </p>
         </div>
 
-        {isLoadingVideos ? (
+        {isLoading ? (
           <div className="flex items-center justify-center h-64">
             <div className="flex flex-col items-center space-y-2">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -309,7 +348,7 @@ const Analytics = () => {
                     </CardHeader>
                     <CardContent className="h-[300px]">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={weeklyData}>
+                        <BarChart data={timeBasedData}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="day" />
                           <YAxis />
@@ -357,7 +396,7 @@ const Analytics = () => {
                   </CardHeader>
                   <CardContent className="h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={weeklyData}>
+                      <ComposedChart data={timeBasedData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="day" />
                         <YAxis />

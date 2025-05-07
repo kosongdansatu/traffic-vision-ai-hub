@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -28,6 +27,7 @@ const History = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const queryClient = useQueryClient();
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
   
   const { data: videos = [], isLoading, error } = useQuery({
     queryKey: ['videos'],
@@ -151,10 +151,22 @@ const History = () => {
                 <CardContent className="p-0">
                   <div className="flex flex-col sm:flex-row">
                     <div className="aspect-video w-full sm:w-48 bg-muted relative">
-                      {/* Video thumbnail placeholder - in a real app, would use real thumbnails */}
-                      <div className="h-full w-full flex items-center justify-center bg-gray-800 text-white">
-                        <Eye className="h-8 w-8 opacity-50" />
-                      </div>
+                      {video.status === "completed" && video.result_path ? (
+                        <div className="h-full w-full bg-gray-800">
+                          <video
+                            className="h-full w-full object-cover"
+                            src={`${apiUrl}/${video.result_path}`}
+                            muted
+                          >
+                            Your browser does not support video playback.
+                          </video>
+                        </div>
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center bg-gray-800 text-white">
+                          <Eye className="h-8 w-8 opacity-50" />
+                        </div>
+                      )}
+                      
                       {video.status === "processing" && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                           <div className="flex flex-col items-center space-y-2 text-white px-3">

@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,25 +13,37 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [totalVehicles, setTotalVehicles] = useState(0);
 
   const { data: videos = [], isLoading, error } = useQuery({
     queryKey: ['videos'],
     queryFn: videoService.getVideos,
   });
 
-  // Calculate total vehicles from processed videos
-  const totalVehicles = React.useMemo(() => {
-    if (!Array.isArray(videos)) return 0;
+  // Fetch total vehicles from completed videos
+  useEffect(() => {
+    if (!Array.isArray(videos)) return;
     
-    let total = 0;
-    videos.forEach(video => {
-      if (video.status === 'completed' && video.json_result_path) {
-        // This is an estimation as we don't have the actual counts in the video object
-        // In a real implementation, we'd either fetch this from the results or have it in the video object
-        total += 100; // Placeholder value
+    const fetchTotalVehicles = async () => {
+      let total = 0;
+      const completedVideos = videos.filter(video => video.status === 'completed');
+      
+      for (const video of completedVideos) {
+        try {
+          const results = await videoService.getVideoResults(video.id);
+          if (results && results.total_counts) {
+            // Sum all vehicle types
+            total += Object.values(results.total_counts).reduce((sum: number, count: number) => sum + count, 0);
+          }
+        } catch (err) {
+          console.error(`Error fetching results for video ${video.id}:`, err);
+        }
       }
-    });
-    return total;
+      
+      setTotalVehicles(total);
+    };
+    
+    fetchTotalVehicles();
   }, [videos]);
 
   // For display in the dashboard, we'll show the 3 most recent videos

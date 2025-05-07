@@ -1,0 +1,23 @@
+{
+    "video_id": "37bc36e8-3867-4f37-96cb-c545b6f9bb6b",
+    "total_frames": 307,
+    "fps": 29.97002997002997,
+    "resolution": "1080x1920",
+    "model_used": "nano",
+    "thumbnail_path": "results/37bc36e8-3867-4f37-96cb-c545b6f9bb6b_thumbnail.jpg",
+    "total_counts": {},
+    "frames": [],
+    "unique_vehicles": {
+        "car": 14,
+        "motorcycle": 7,
+        "bus": 0,
+        "truck": 1
+    },
+    "processing_stats": {
+        "processed_frames": 0,
+        "total_frames": 307,
+        "processing_time_seconds": 23.638768196105957,
+        "frames_per_second": 0.0,
+        "vehicle_density": 0
+    }
+}
