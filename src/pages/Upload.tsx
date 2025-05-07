@@ -1,5 +1,7 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,15 +11,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { UploadCloud } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { useNavigate } from "react-router-dom";
+import { videoService } from "@/services/api";
 
 const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [videoName, setVideoName] = useState("");
   const [description, setDescription] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
   const navigate = useNavigate();
+
+  // Create a mutation for uploading videos
+  const uploadMutation = useMutation({
+    mutationFn: (formData: FormData) => {
+      return videoService.uploadVideo(formData);
+    },
+    onSuccess: () => {
+      toast.success("Video uploaded successfully! Processing will begin shortly.");
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload video. Please try again.");
+    },
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -48,22 +64,30 @@ const Upload = () => {
       return;
     }
     
-    setUploading(true);
+    // Prepare form data for upload
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("name", videoName);
+    if (description) {
+      formData.append("description", description);
+    }
     
-    // Simulate upload progress
+    // Upload the video
+    uploadMutation.mutate(formData);
+    
+    // Simulate upload progress (since the actual upload doesn't provide progress)
     let progress = 0;
     const interval = setInterval(() => {
       progress += 5;
       setUploadProgress(progress);
       
-      if (progress >= 100) {
+      if (progress >= 100 || uploadMutation.isSuccess || uploadMutation.isError) {
         clearInterval(interval);
-        setUploading(false);
-        toast.success("Video uploaded successfully! Processing will begin shortly.");
-        navigate("/dashboard");
       }
     }, 200);
   };
+
+  const isUploading = uploadMutation.isPending;
 
   return (
     <DashboardLayout>
@@ -92,7 +116,7 @@ const Upload = () => {
                     placeholder="Enter a name for your video" 
                     value={videoName}
                     onChange={(e) => setVideoName(e.target.value)}
-                    disabled={uploading}
+                    disabled={isUploading}
                     required
                   />
                 </div>
@@ -103,12 +127,12 @@ const Upload = () => {
                     placeholder="Enter a description for your video" 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    disabled={uploading}
+                    disabled={isUploading}
                   />
                 </div>
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="video">Video File</Label>
-                  {!file && !uploading ? (
+                  {!file && !isUploading ? (
                     <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-input p-8 hover:bg-muted/50 cursor-pointer" onClick={() => document.getElementById("video")?.click()}>
                       <UploadCloud className="h-10 w-10 text-muted-foreground" />
                       <p className="mt-2 text-sm text-muted-foreground">
@@ -123,7 +147,7 @@ const Upload = () => {
                         accept="video/*"
                         className="hidden" 
                         onChange={handleFileChange}
-                        disabled={uploading}
+                        disabled={isUploading}
                       />
                     </div>
                   ) : (
@@ -136,7 +160,7 @@ const Upload = () => {
                               {(file.size / (1024 * 1024)).toFixed(2)} MB
                             </p>
                           </div>
-                          {!uploading && (
+                          {!isUploading && (
                             <Button 
                               type="button" 
                               variant="ghost" 
@@ -152,7 +176,7 @@ const Upload = () => {
                         </div>
                       )}
                       
-                      {uploading && (
+                      {isUploading && (
                         <div className="mt-4 space-y-2">
                           <div className="flex justify-between text-sm">
                             <span>Uploading...</span>
@@ -169,10 +193,10 @@ const Upload = () => {
               <div className="flex justify-end">
                 <Button 
                   type="submit" 
-                  disabled={!file || uploading}
+                  disabled={!file || isUploading}
                   className="w-full sm:w-auto"
                 >
-                  {uploading ? "Uploading..." : "Upload Video"}
+                  {isUploading ? "Uploading..." : "Upload Video"}
                 </Button>
               </div>
             </form>

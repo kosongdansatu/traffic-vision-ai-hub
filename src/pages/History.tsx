@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Search, Trash2, Eye, Download } from "lucide-react";
-import { mockVideoData } from "@/utils/mockData";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -22,26 +22,73 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { videoService } from "@/services/api";
 
 const History = () => {
-  const [videos, setVideos] = useState(mockVideoData);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const queryClient = useQueryClient();
   
-  const handleDelete = (id: string) => {
-    setVideos(videos.filter(video => video.id !== id));
-    toast.success("Video deleted successfully");
+  const { data: videos = [], isLoading, error } = useQuery({
+    queryKey: ['videos'],
+    queryFn: videoService.getVideos,
+  });
+
+  const deleteVideoMutation = useMutation({
+    mutationFn: (id: number) => videoService.deleteVideo(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['videos'] });
+      toast.success("Video deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Delete video error:", error);
+      toast.error("Failed to delete video");
+    }
+  });
+  
+  const handleDelete = (id: number) => {
+    deleteVideoMutation.mutate(id);
   };
   
-  const filteredVideos = videos.filter(video => {
-    // Filter by search query
-    const matchesSearch = video.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredVideos = React.useMemo(() => {
+    if (!Array.isArray(videos)) return [];
     
-    // Filter by status
-    const matchesStatus = filterStatus === "all" || video.status === filterStatus;
-    
-    return matchesSearch && matchesStatus;
-  });
+    return videos.filter(video => {
+      // Filter by search query
+      const matchesSearch = video.name.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // Filter by status
+      const matchesStatus = filterStatus === "all" || video.status === filterStatus;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [videos, searchQuery, filterStatus]);
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="flex flex-col items-center space-y-2">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <span className="text-sm text-muted-foreground">Loading videos...</span>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center h-64 space-y-4">
+          <p className="text-destructive">Failed to load videos</p>
+          <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['videos'] })}>
+            Try Again
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -73,8 +120,10 @@ const History = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="processed">Processed</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -102,16 +151,15 @@ const History = () => {
                 <CardContent className="p-0">
                   <div className="flex flex-col sm:flex-row">
                     <div className="aspect-video w-full sm:w-48 bg-muted relative">
-                      <img
-                        src={video.thumbnail}
-                        alt={video.name}
-                        className="h-full w-full object-cover"
-                      />
+                      {/* Video thumbnail placeholder - in a real app, would use real thumbnails */}
+                      <div className="h-full w-full flex items-center justify-center bg-gray-800 text-white">
+                        <Eye className="h-8 w-8 opacity-50" />
+                      </div>
                       {video.status === "processing" && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                           <div className="flex flex-col items-center space-y-2 text-white px-3">
                             <p>Processing...</p>
-                            <Progress value={video.progress} className="w-24" />
+                            <Progress value={50} className="w-24" />
                           </div>
                         </div>
                       )}
@@ -122,7 +170,7 @@ const History = () => {
                           <h3 className="font-semibold">{video.name}</h3>
                           <Badge
                             variant={
-                              video.status === "processed"
+                              video.status === "completed"
                                 ? "default"
                                 : video.status === "processing"
                                 ? "secondary"
@@ -133,32 +181,15 @@ const History = () => {
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Uploaded on {video.date}
+                          Uploaded on {new Date(video.created_at).toLocaleDateString()}
                         </p>
                         <div className="mt-2 flex items-center justify-start gap-x-2 text-sm">
-                          <span>Duration: {video.duration}</span>
-                          <span>•</span>
-                          <span>Size: {video.size}</span>
+                          <span>Original: {video.original_filename}</span>
                         </div>
 
-                        {video.status === "processed" && (
-                          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                            <div className="flex items-center space-x-1">
-                              <div className="h-3 w-3 rounded-full bg-traffic-car" />
-                              <span className="text-sm">{video.detectionResults.car} cars</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <div className="h-3 w-3 rounded-full bg-traffic-truck" />
-                              <span className="text-sm">{video.detectionResults.truck} trucks</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <div className="h-3 w-3 rounded-full bg-traffic-bus" />
-                              <span className="text-sm">{video.detectionResults.bus} buses</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <div className="h-3 w-3 rounded-full bg-traffic-motorcycle" />
-                              <span className="text-sm">{video.detectionResults.motorcycle} motorcycles</span>
-                            </div>
+                        {video.status === "completed" && video.result_path && (
+                          <div className="mt-2">
+                            <p className="text-sm font-medium">Processing completed</p>
                           </div>
                         )}
                       </div>
@@ -172,7 +203,8 @@ const History = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          disabled={video.status !== "processed"}
+                          disabled={video.status !== "completed"}
+                          onClick={() => videoService.downloadVideo(video.id)}
                         >
                           <Download className="mr-1.5 h-4 w-4" />
                           Download
