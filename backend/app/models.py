@@ -1,9 +1,9 @@
-
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from .database import Base
+
 
 class User(Base):
     __tablename__ = "users"
@@ -16,6 +16,7 @@ class User(Base):
 
     videos = relationship("Video", back_populates="owner")
 
+
 class Video(Base):
     __tablename__ = "videos"
 
@@ -27,6 +28,10 @@ class Video(Base):
     result_path = Column(String, nullable=True)
     json_result_path = Column(String, nullable=True)
     status = Column(String)  # pending, processing, completed, failed
+    model_size = Column(
+        String, nullable=True, default="nano"
+    )  # nano, small, medium, large, x-large
+    error_message = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     user_id = Column(Integer, ForeignKey("users.id"))

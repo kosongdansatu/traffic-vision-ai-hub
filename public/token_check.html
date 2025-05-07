@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Token Authentication Check</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .result {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        button.red {
+            background-color: #f44336;
+        }
+        
+        button.blue {
+            background-color: #2196F3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Token Authentication Check</h1>
+
+        <button onclick="checkToken()">Check Token</button>
+        <button class="red" onclick="deleteToken()">Delete Token</button>
+        <button class="blue" onclick="createDummyToken()">Create Dummy Token</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkToken() {
+            const token = localStorage.getItem('token');
+            const resultDiv = document.getElementById('result');
+
+            if (token) {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <h3>Token Found!</h3>
+                    <p>Your authentication token is:</p>
+                    <p><strong>${token}</strong></p>
+                    <p>This indicates you should be authorized to upload videos.</p>
+                `;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>No Token Found!</h3>
+                    <p>You need to login first to get an authentication token.</p>
+                    <p>Go to the login page and sign in before attempting to upload videos.</p>
+                `;
+            }
+        }
+
+        function deleteToken() {
+            localStorage.removeItem('token');
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+            resultDiv.innerHTML = '<p>Token has been deleted. You are now logged out.</p>';
+        }
+
+        function createDummyToken() {
+            // Create dummy JWT (for testing only)
+            localStorage.setItem('token',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiZXhwIjoxOTcxNzIyMjM5fQ.Bb1Ctz1Y-7OFrzXnXQGR2kVBGETcnE6_BD2GBmFD3rM'
+            );
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+            resultDiv.innerHTML =
+                '<p>Dummy token created (for testing only). Note this may not work with your actual backend.</p>';
+        }
+
+        // Auto-check on page load
+        window.onload = checkToken;
+    </script>
+</body>
+
+</html>

@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -8,6 +7,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 300000, // 5 minutes timeout for large uploads
+  maxContentLength: 200 * 1024 * 1024, // 200MB
+  maxBodyLength: 200 * 1024 * 1024, // 200MB
 });
 
 // Add authentication token to requests if available
