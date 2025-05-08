@@ -29,6 +29,8 @@ backend/*.db
 __pycache__/
 *.py[cod]
 *$py.class
+backend/app/__pycache__/
+backend/app/__pycache__/*.pyc
 
 # Environment and dependencies
 venv/
@@ -58,3 +60,9 @@ Thumbs.db
 .tmp/
 .temp/
 tmp/
+tmp_backup/
+
+# Large files (>100MB)
+*.mp4
+backend/uploads/*.mp4
+backend/results/*.mp4
