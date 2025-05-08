@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -58,6 +58,21 @@ const VideoDetail = () => {
     }
   };
   
+  const handleDownloadResults = () => {
+    if (video && video.status === 'completed') {
+      videoService.downloadVideoResults(videoId)
+        .then(success => {
+          if (success) {
+            toast.success("JSON results downloaded successfully");
+          } else {
+            toast.error("Failed to download JSON results");
+          }
+        });
+    } else {
+      toast.error("Video processing not completed yet");
+    }
+  };
+  
   // Prepare data for charts
   const pieData = React.useMemo(() => {
     if (!results || !results.total_counts) return [];
@@ -82,8 +97,26 @@ const VideoDetail = () => {
       }));
   }, [results]);
   
-  // API URL for streams
+  // API URL for streams and token for authentication
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const token = localStorage.getItem('token');
+  
+  const [isVideoPlayable, setIsVideoPlayable] = useState<boolean>(true);
+  
+  // Check video playability when video info is loaded
+  useEffect(() => {
+    if (video?.result_path) {
+      videoService.checkVideoPlayable(video.result_path)
+        .then(playable => {
+          console.log("Video playability check result:", playable);
+          setIsVideoPlayable(playable);
+        })
+        .catch(err => {
+          console.error("Error checking video playability:", err);
+          setIsVideoPlayable(false);
+        });
+    }
+  }, [video?.result_path]);
   
   if (isLoadingVideo) {
     return (
@@ -132,13 +165,53 @@ const VideoDetail = () => {
               <div className="aspect-video bg-muted relative">
                 {video.status === "completed" && video.result_path ? (
                   <div className="flex items-center justify-center h-full bg-gray-900">
-                    <video 
-                      className="w-full h-full" 
-                      controls 
-                      src={`${apiUrl}/${video.result_path}`}
-                    >
-                      Your browser does not support the video tag.
-                    </video>
+                    {isVideoPlayable ? (
+                      <video 
+                        className="w-full h-full" 
+                        controls 
+                        controlsList="nodownload"
+                        src={`${apiUrl}/${video.result_path}?t=${Date.now()}&auth_token=${token || ''}`}
+                        poster={video.json_result_path ? `${apiUrl}/${video.json_result_path.replace("_results.json", "_thumbnail.jpg")}?auth_token=${token || ''}` : undefined}
+                        onError={(e) => {
+                          console.error("Video loading error:", e);
+                          const target = e.target as HTMLVideoElement;
+                          
+                          // Try again with a different approach
+                          if (!target.querySelector('source')) {
+                            // Clear the src attribute and use source element instead
+                            target.removeAttribute('src');
+                            
+                            // Create a source element
+                            const source = document.createElement('source');
+                            source.src = `${apiUrl}/${video.result_path}?t=${Date.now()}&auth_token=${token || ''}`;
+                            source.type = 'video/mp4';
+                            target.appendChild(source);
+                            
+                            // Try loading again
+                            target.load();
+                            
+                            // Set a timeout to check if video loaded after this change
+                            setTimeout(() => {
+                              if (target.networkState === HTMLMediaElement.NETWORK_NO_SOURCE || 
+                                  target.error) {
+                                setIsVideoPlayable(false);
+                              }
+                            }, 3000);
+                          } else {
+                            setIsVideoPlayable(false);
+                          }
+                        }}
+                      >
+                        <source src={`${apiUrl}/${video.result_path}?t=${Date.now()}&auth_token=${token || ''}`} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <div className="text-center p-4">
+                        <p className="text-white mb-4">Video playback is not available. Please try downloading the video instead.</p>
+                        <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700">
+                          <Download className="mr-2 h-4 w-4" /> Download Video
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ) : video.status === "processing" ? (
                   <div className="flex items-center justify-center h-full bg-gray-900">
@@ -155,25 +228,55 @@ const VideoDetail = () => {
                 )}
               </div>
               <div className="p-4 border-t bg-card">
-                <div className="flex flex-wrap gap-2">
-                  <Button 
-                    variant="secondary" 
-                    size="sm"
-                    disabled={video.status !== "completed"}
-                    onClick={handleDownload}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Processed Video
-                  </Button>
-                  {video.file_path && (
+                <div className="flex flex-col space-y-3">
+                  <div className="flex flex-wrap gap-2">
                     <Button 
-                      variant="outline" 
+                      variant="secondary" 
                       size="sm"
-                      onClick={() => window.open(`${apiUrl}/${video.file_path}`, '_blank')}
+                      disabled={video.status !== "completed"}
+                      onClick={handleDownload}
                     >
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Original
+                      <Download className="mr-2 h-4 w-4" />
+                      Download Processed Video
                     </Button>
+                    {video.file_path && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => window.open(`${apiUrl}/${video.file_path}?auth_token=${token || ''}`, '_blank')}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Original
+                      </Button>
+                    )}
+                    
+                    {video.status === "completed" && video.result_path && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => window.open(`${apiUrl}/${video.result_path}?auth_token=${token || ''}`, '_blank')}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        Open Video Directly
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {video.status === "completed" && results && results.processing_stats && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2 text-sm text-muted-foreground">
+                      <div>
+                        <span className="font-medium">Model:</span> {video.model_size || "nano"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Processing Time:</span> {results.processing_stats.processing_time_seconds ? `${results.processing_stats.processing_time_seconds.toFixed(1)}s` : "N/A"}
+                      </div>
+                      <div>
+                        <span className="font-medium">FPS:</span> {results.processing_stats.frames_per_second ? results.processing_stats.frames_per_second.toFixed(1) : "N/A"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Frames:</span> {results.processing_stats.processed_frames || 0}/{results.processing_stats.total_frames || 0}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
@@ -226,7 +329,7 @@ const VideoDetail = () => {
                                 <CardTitle className="text-sm capitalize">{type}</CardTitle>
                               </CardHeader>
                               <CardContent>
-                                <div className="text-2xl font-bold">{count}</div>
+                                <div className="text-2xl font-bold">{String(count)}</div>
                               </CardContent>
                             </Card>
                           ))}
@@ -380,7 +483,7 @@ const VideoDetail = () => {
                   </dl>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={handleDownload}>
+                  <Button variant="outline" className="w-full" onClick={handleDownloadResults}>
                     <Download className="mr-2 h-4 w-4" />
                     Download Results JSON
                   </Button>

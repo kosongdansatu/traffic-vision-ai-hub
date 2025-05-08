@@ -152,15 +152,106 @@ const History = () => {
                   <div className="flex flex-col sm:flex-row">
                     <div className="aspect-video w-full sm:w-48 bg-muted relative">
                       {video.status === "completed" && video.result_path ? (
-                        <div className="h-full w-full bg-gray-800">
+                        <Link to={`/videos/${video.id}`}>
+                          {video.json_result_path && video.json_result_path.includes("_results.json") ? (
+                            <img 
+                              src={`${apiUrl}/${video.json_result_path.replace("_results.json", "_thumbnail.jpg")}`}
+                              alt={video.name}
+                              className="h-full w-full object-cover hover:opacity-90 transition-opacity"
+                              onError={(e) => {
+                                console.error("Thumbnail loading error");
+                                const target = e.target as HTMLImageElement;
+                                target.onerror = null;
+                                target.style.display = 'none';
+                                const parent = target.parentElement;
+                                if (parent) {
+                                  // Find the video element
+                                  const videoElement = parent.querySelector('video') as HTMLVideoElement;
+                                  if (videoElement) {
+                                    videoElement.style.display = 'block';
+                                    
+                                    // Make sure the video has the right source
+                                    if (!videoElement.src || videoElement.src === '') {
+                                      videoElement.src = `${apiUrl}/${video.result_path}`;
+                                    }
+                                    
+                                    // Try to load the video
+                                    videoElement.load();
+                                    
+                                    // Handle video error
+                                    videoElement.onerror = () => {
+                                      videoElement.style.display = 'none';
+                                      // Create a fallback element
+                                      const fallback = document.createElement('div');
+                                      fallback.className = 'h-full w-full flex items-center justify-center bg-gray-800 text-white';
+                                      fallback.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>';
+                                      parent.appendChild(fallback);
+                                    };
+                                  } else {
+                                    // If no video element is found, create one
+                                    const newVideo = document.createElement('video');
+                                    newVideo.className = 'h-full w-full object-cover hover:opacity-90 transition-opacity';
+                                    newVideo.src = `${apiUrl}/${video.result_path}`;
+                                    newVideo.muted = true;
+                                    newVideo.style.display = 'block';
+                                    
+                                    // Add mouse event handlers
+                                    newVideo.onmouseover = () => {
+                                      newVideo.play().catch(err => console.error("Autoplay failed:", err));
+                                    };
+                                    newVideo.onmouseout = () => {
+                                      newVideo.pause();
+                                      newVideo.currentTime = 0;
+                                    };
+                                    
+                                    // Handle video error
+                                    newVideo.onerror = () => {
+                                      newVideo.style.display = 'none';
+                                      // Create a fallback element
+                                      const fallback = document.createElement('div');
+                                      fallback.className = 'h-full w-full flex items-center justify-center bg-gray-800 text-white';
+                                      fallback.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>';
+                                      parent.appendChild(fallback);
+                                    };
+                                    
+                                    parent.appendChild(newVideo);
+                                  }
+                                }
+                              }}
+                            />
+                          ) : null}
+                          
                           <video
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover hover:opacity-90 transition-opacity"
                             src={`${apiUrl}/${video.result_path}`}
                             muted
+                            style={{ display: 'none' }}
+                            onMouseOver={(e) => {
+                              const target = e.target as HTMLVideoElement;
+                              target.play().catch(err => console.error("Autoplay failed:", err));
+                            }}
+                            onMouseOut={(e) => {
+                              const target = e.target as HTMLVideoElement;
+                              target.pause();
+                              target.currentTime = 0;
+                            }}
+                            onError={(e) => {
+                              console.error("Video preview error");
+                              const target = e.target as HTMLVideoElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                // Create a fallback element
+                                const fallback = document.createElement('div');
+                                fallback.className = 'h-full w-full flex items-center justify-center bg-gray-800 text-white';
+                                fallback.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>';
+                                parent.appendChild(fallback);
+                              }
+                            }}
                           >
                             Your browser does not support video playback.
                           </video>
-                        </div>
+                        </Link>
                       ) : (
                         <div className="h-full w-full flex items-center justify-center bg-gray-800 text-white">
                           <Eye className="h-8 w-8 opacity-50" />
@@ -199,9 +290,14 @@ const History = () => {
                           <span>Original: {video.original_filename}</span>
                         </div>
 
-                        {video.status === "completed" && video.result_path && (
-                          <div className="mt-2">
-                            <p className="text-sm font-medium">Processing completed</p>
+                        {video.status === "completed" && (
+                          <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            <div>
+                              <span className="font-medium">Model:</span> {video.model_size || "nano"}
+                            </div>
+                            <div>
+                              <span className="font-medium">Processing:</span> {video.processing_time ? `${(video.processing_time).toFixed(1)}s` : "N/A"}
+                            </div>
                           </div>
                         )}
                       </div>

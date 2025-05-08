@@ -7,6 +7,7 @@ from fastapi import (
     UploadFile,
     Form,
     BackgroundTasks,
+    Request,
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -20,6 +21,9 @@ import logging
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 import traceback
+from starlette.responses import FileResponse
+from starlette.staticfiles import StaticFiles as StarletteStaticFiles
+import mimetypes
 
 from . import models, schemas, crud, auth
 from .database import engine, get_db
@@ -50,9 +54,114 @@ os.makedirs("uploads", exist_ok=True)
 os.makedirs("results", exist_ok=True)
 os.makedirs("models", exist_ok=True)
 
-# Mount static directories
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-app.mount("/results", StaticFiles(directory="results"), name="results")
+
+# Custom static files class to add CORS headers
+class CORSStaticFiles(StarletteStaticFiles):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    async def get_response(self, path, scope):
+        # Check for authentication token in query parameters
+        auth_token = None
+        query_string = scope.get("query_string", b"").decode("utf-8")
+
+        if query_string:
+            for param in query_string.split("&"):
+                if param.startswith("auth_token="):
+                    auth_token = param.split("=")[1]
+                    break
+
+        # Validate token if present
+        current_user = None
+        if auth_token:
+            try:
+                # Import auth here to avoid circular import
+                from . import auth as auth_module
+
+                # Get DB session
+                from .database import get_db
+
+                db = next(get_db())
+                current_user = auth_module.decode_token(auth_token, db)
+                if current_user:
+                    # User authenticated, continue to serve the file
+                    logger.info(
+                        f"Authenticated static file access for user: {current_user.email}, path: {path}"
+                    )
+                else:
+                    logger.error(f"Invalid token for static file: {path}")
+                    # Return 401 response for invalid token
+                    from starlette.responses import Response
+
+                    return Response(
+                        content='{"detail":"Invalid authentication token"}',
+                        status_code=401,
+                        media_type="application/json",
+                        headers={
+                            "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Methods": "GET, OPTIONS",
+                            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                        },
+                    )
+            except Exception as e:
+                logger.error(f"Error validating token for static file: {str(e)}")
+                # Return 401 response
+                from starlette.responses import Response
+
+                return Response(
+                    content='{"detail":"Not authenticated"}',
+                    status_code=401,
+                    media_type="application/json",
+                    headers={
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "GET, OPTIONS",
+                        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                    },
+                )
+
+        # If no valid auth token and path requires authentication, reject
+        if not current_user and (path.startswith(("results/", "uploads/"))):
+            # Return 401 response for unauthenticated access
+            from starlette.responses import Response
+
+            logger.error(f"Unauthorized access to protected static file: {path}")
+            return Response(
+                content='{"detail":"Not authenticated"}',
+                status_code=401,
+                media_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, OPTIONS",
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                },
+            )
+
+        # Authentication successful or not required, serve the file
+        response = await super().get_response(path, scope)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Accept-Ranges"] = "bytes"
+
+        # Add additional headers for video content types
+        if path.endswith((".mp4", ".webm", ".ogg")):
+            mime_type, _ = mimetypes.guess_type(path)
+            if mime_type:
+                response.headers["Content-Type"] = mime_type
+            # Use inline content disposition for viewing in browser
+            response.headers["Content-Disposition"] = "inline"
+        elif path.endswith((".jpg", ".jpeg", ".png")):
+            mime_type, _ = mimetypes.guess_type(path)
+            if mime_type:
+                response.headers["Content-Type"] = mime_type
+            response.headers["Content-Disposition"] = "inline"
+
+        return response
+
+
+# Mount static directories with CORS support
+app.mount("/uploads", CORSStaticFiles(directory="uploads", html=False), name="uploads")
+app.mount("/results", CORSStaticFiles(directory="results", html=False), name="results")
 
 
 # Background task for video processing
@@ -292,18 +401,91 @@ def delete_video(
 
 
 @app.get("/api/videos/{video_id}/download")
-def download_processed_video(
-    video_id: int,
-    current_user: schemas.User = Depends(auth.get_current_active_user),
-    db: Session = Depends(get_db),
+async def download_processed_video(
+    request: Request, video_id: int, db: Session = Depends(get_db)
 ):
+    """Download processed video with authentication via token in query parameter"""
+    # Get auth token from query parameter
+    auth_token = request.query_params.get("auth_token")
+
+    # Initialize authenticated user
+    authenticated_user = None
+
+    # Try to authenticate with token
+    if auth_token:
+        try:
+            logger.info(f"Attempting to authenticate with token from query parameter")
+            authenticated_user = auth.decode_token(auth_token, db)
+            if authenticated_user:
+                logger.info(
+                    f"Successfully authenticated user {authenticated_user.email} with token"
+                )
+        except Exception as e:
+            logger.error(f"Error decoding token: {str(e)}")
+            raise HTTPException(status_code=401, detail="Invalid authentication token")
+
+    # If no token or invalid token, try to get authenticated user from bearer token
+    if not authenticated_user:
+        try:
+            # Get authorization header
+            auth_header = request.headers.get("Authorization")
+            if auth_header and auth_header.startswith("Bearer "):
+                token = auth_header.replace("Bearer ", "")
+                authenticated_user = auth.decode_token(token, db)
+        except Exception as e:
+            logger.error(f"Error decoding bearer token: {str(e)}")
+
+    # Verify authentication
+    if not authenticated_user:
+        logger.error("No authenticated user found")
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    # Fetch the video
     video = crud.get_video(db, video_id=video_id)
-    if video is None or video.user_id != current_user.id:
+    if video is None or video.user_id != authenticated_user.id:
+        logger.error(f"Video not found or not owned by user: {video_id}")
         raise HTTPException(status_code=404, detail="Video not found")
+
     if video.status != "completed" or not video.result_path:
+        logger.error(f"Video processing not completed: {video_id}")
         raise HTTPException(status_code=400, detail="Video processing not completed")
 
-    return FileResponse(video.result_path, filename=f"{video.name}_processed.mp4")
+    # Check if the file exists
+    if not os.path.exists(video.result_path):
+        logger.error(f"Video file not found on disk: {video.result_path}")
+        raise HTTPException(status_code=404, detail="Video file not found")
+
+    # Get the file mime type
+    mime_type, _ = mimetypes.guess_type(video.result_path)
+    if not mime_type:
+        mime_type = "video/mp4"  # Default to MP4 if we can't determine type
+
+    # Generate a clear filename for download
+    download_filename = f"{video.name.replace(' ', '_')}_processed.mp4"
+
+    # Add custom headers for better browser compatibility
+    headers = {
+        "Content-Disposition": f'attachment; filename="{download_filename}"',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Accept-Ranges": "bytes",
+        "Content-Type": mime_type,
+    }
+
+    try:
+        logger.info(f"Sending file: {video.result_path} as {download_filename}")
+        return FileResponse(
+            path=video.result_path,
+            filename=download_filename,
+            headers=headers,
+            media_type=mime_type,
+        )
+    except Exception as e:
+        logger.error(f"Error serving video file: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error serving video file: {str(e)[:200]}"
+        )
 
 
 @app.get("/api/videos/{video_id}/results")
