@@ -39,10 +39,78 @@ MODEL_PATH = os.path.join(MODELS_DIR, DEFAULT_MODEL)
 # Load YOLOv8 model (pre-trained on COCO dataset)
 model = None
 
-# Tracker untuk kendaraan yang terdeteksi
+# Track lifespan dalam frame, berapa lama objek yang tidak terlihat akan tetap dalam pelacakan
+track_lifespan = 30
+
+# Minimum IoU (Intersection over Union) untuk mencocokkan objek yang sama
+MIN_IOU_THRESHOLD = 0.5  # Increased from 0.25 for better matching
+
+# Dictionary untuk objek yang sedang di-track
 tracked_vehicles = {}
 next_track_id = 1
-track_lifespan = 20  # Jumlah frame untuk mempertahankan track yang tidak terlihat
+
+# Track unique vehicles that cross the counting line to prevent multiple counts
+unique_counted_vehicles = set()
+
+# Track object fingerprints to prevent duplicate counting of the same physical vehicle
+object_fingerprints = set()
+
+# Track repeated detections of the same object to clean up tracking
+duplicate_detection_threshold = 0.5  # High IoU threshold for identifying duplicates
+
+# Maximum counting frequency (in frames) to avoid multiple counts of the same vehicle
+min_frames_between_counts = 10
+
+
+# Create object fingerprint based on attributes
+def create_object_fingerprint(bbox, vehicle_type, position_in_frame):
+    """
+    Create a unique fingerprint for a vehicle based on its properties
+    Args:
+        bbox: (x1, y1, x2, y2) bounding box
+        vehicle_type: type of vehicle (car, truck, etc.)
+        position_in_frame: relative position in frame (0-1 range)
+    Returns:
+        A string representing the object fingerprint
+    """
+    x1, y1, x2, y2 = bbox
+    width = x2 - x1
+    height = y2 - y1
+    aspect_ratio = width / height if height > 0 else 0
+    size = width * height
+
+    # Create a fingerprint string combining vehicle properties
+    # Round values to reduce sensitivity to small changes
+    fingerprint = f"{vehicle_type}_{round(aspect_ratio, 1)}_{round(size/1000, 1)}_{round(position_in_frame, 1)}"
+
+    return fingerprint
+
+
+# Function to calculate IoU between two bounding boxes
+def calculate_iou(box1, box2):
+    """Calculate Intersection over Union (IoU) between two bounding boxes"""
+    # Format box: (x1, y1, x2, y2)
+    x1_1, y1_1, x2_1, y2_1 = box1
+    x1_2, y1_2, x2_2, y2_2 = box2
+
+    # Calculate intersection area
+    x_left = max(x1_1, x1_2)
+    y_top = max(y1_1, y1_2)
+    x_right = min(x2_1, x2_2)
+    y_bottom = min(y2_1, y2_2)
+
+    if x_right < x_left or y_bottom < y_top:
+        return 0.0  # No intersection
+
+    intersection_area = (x_right - x_left) * (y_bottom - y_top)
+
+    # Calculate area of each box
+    box1_area = (x2_1 - x1_1) * (y2_1 - y1_1)
+    box2_area = (x2_2 - x1_2) * (y2_2 - y1_2)
+
+    # Calculate IoU
+    iou = intersection_area / float(box1_area + box2_area - intersection_area)
+    return iou
 
 
 def download_model(model_name, save_path):
@@ -170,7 +238,7 @@ def process_frame(
     frame: np.ndarray, results: Dict, model_size="nano", frame_number=0
 ) -> Tuple[np.ndarray, Dict]:
     """Process a single frame and detect vehicles with tracking"""
-    global tracked_vehicles, next_track_id
+    global tracked_vehicles, next_track_id, unique_counted_vehicles, object_fingerprints
 
     model = get_model(model_size)
 
@@ -203,8 +271,8 @@ def process_frame(
     detected_objects = []
     current_tracked_ids = set()
 
-    # Dictionary untuk objek yang terdeteksi di frame ini
-    frame_detections = {}
+    # Store all detections for this frame to process duplicates
+    current_detections = []
 
     # Parse results and draw bounding boxes
     annotated_frame = frame.copy()
@@ -216,69 +284,165 @@ def process_frame(
             confidence = box.conf.item()
 
             # Only process if it's a vehicle and confidence is high enough
-            if class_id in VEHICLE_CLASSES and confidence > 0.25:
+            if class_id in VEHICLE_CLASSES and confidence > 0.4:  # Increased from 0.3
                 vehicle_type = VEHICLE_CLASSES[class_id]
 
                 # Get coordinates
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
 
-                # Hitung centroid (titik tengah) objek
-                center_x = (x1 + x2) // 2
-                center_y = (y1 + y2) // 2
+                # Minimum size check to avoid false positives
+                bbox_width = x2 - x1
+                bbox_height = y2 - y1
+                min_size = (
+                    min(frame_width, frame_height) * 0.03  # Increased from 0.02
+                )  # 3% of frame dimension
 
-                # Coba cocokkan dengan objek tertrack yang sudah ada berdasarkan posisi
-                matched_id = None
-                min_distance = float("inf")
+                if bbox_width < min_size or bbox_height < min_size:
+                    continue  # Skip too small objects, likely false detections
 
-                for track_id, vehicle_info in tracked_vehicles.items():
-                    if vehicle_info["type"] == vehicle_type and vehicle_info["active"]:
-                        # Hitung jarak Euclidean
-                        track_x, track_y = vehicle_info["centroid"]
-                        distance = (
-                            (center_x - track_x) ** 2 + (center_y - track_y) ** 2
-                        ) ** 0.5
+                # Store current detection for duplicate processing
+                current_detection = {
+                    "bbox": (x1, y1, x2, y2),
+                    "type": vehicle_type,
+                    "confidence": confidence,
+                    "width": bbox_width,
+                    "height": bbox_height,
+                    "position_x": (x1 + x2) / 2 / frame_width,  # Normalized x position
+                    "position_y": (y1 + y2) / 2 / frame_height,  # Normalized y position
+                }
+                current_detections.append(current_detection)
 
-                        # Jika jaraknya cukup dekat, ini mungkin objek yang sama
-                        # Nilai threshold bisa disesuaikan tergantung pada ukuran frame dan kecepatan objek
-                        if (
-                            distance < min(frame.shape[0], frame.shape[1]) * 0.1
-                            and distance < min_distance
-                        ):
-                            min_distance = distance
+        # First pass: identify and remove duplicate detections in the current frame
+        # Sort detections by confidence to keep the best ones
+        current_detections.sort(key=lambda x: x["confidence"], reverse=True)
+        filtered_detections = []
+        for i, detection1 in enumerate(current_detections):
+            keep = True
+            # Check if this detection is a duplicate of any higher-confidence detection we're keeping
+            for detection2 in filtered_detections:
+                iou = calculate_iou(detection1["bbox"], detection2["bbox"])
+                if (
+                    iou > duplicate_detection_threshold
+                    and detection1["type"] == detection2["type"]
+                ):
+                    keep = False
+                    break
+            if keep:
+                filtered_detections.append(detection1)
+
+        # Second pass: process the filtered detections
+        for detection_info in filtered_detections:
+            # Extract detection info
+            x1, y1, x2, y2 = detection_info["bbox"]
+            vehicle_type = detection_info["type"]
+            confidence = detection_info["confidence"]
+            bbox_width = detection_info["width"]
+            bbox_height = detection_info["height"]
+            position_x = detection_info["position_x"]
+            position_y = detection_info["position_y"]
+
+            # Create object fingerprint
+            position_in_frame = position_y  # Use vertical position as a key component
+            obj_fingerprint = create_object_fingerprint(
+                (x1, y1, x2, y2), vehicle_type, position_in_frame
+            )
+
+            # Hitung centroid (titik tengah) objek
+            center_x = (x1 + x2) // 2
+            center_y = (y1 + y2) // 2
+
+            # Coba cocokkan dengan objek tertrack yang sudah ada berdasarkan posisi dan IoU
+            matched_id = None
+            max_iou = MIN_IOU_THRESHOLD
+            min_distance = (
+                min(frame_width, frame_height) * 0.15
+            )  # Increased distance threshold
+
+            for track_id, vehicle_info in tracked_vehicles.items():
+                if vehicle_info["type"] == vehicle_type and vehicle_info["active"]:
+                    # Calculate IoU between current box and tracked box
+                    if "bbox" in vehicle_info:
+                        tracked_bbox = vehicle_info["bbox"]
+                        iou = calculate_iou((x1, y1, x2, y2), tracked_bbox)
+
+                        # If IoU is good enough, prioritize IoU matching
+                        if iou > max_iou:
+                            max_iou = iou
                             matched_id = track_id
+                            continue
 
-                # Jika cocok dengan objek yang ada, update informasinya
-                if matched_id is not None:
-                    track_id = matched_id
-                    previous_y = tracked_vehicles[track_id]["centroid"][1]
+                    # If IoU is not good enough, try distance-based matching
+                    track_x, track_y = vehicle_info["centroid"]
+                    distance = (
+                        (center_x - track_x) ** 2 + (center_y - track_y) ** 2
+                    ) ** 0.5
 
-                    # Check if vehicle crossed the counting line from top to bottom
-                    crossed_line = (
-                        previous_y < counting_line_y and center_y >= counting_line_y
-                    )
+                    # Adaptive threshold based on object size
+                    size_factor = (
+                        (bbox_width + bbox_height) / 2 / 100
+                    )  # Normalize by 100px
+                    adaptive_threshold = min_distance * (1 + size_factor)
 
-                    # Update tracking info
-                    tracked_vehicles[track_id].update(
-                        {
-                            "centroid": (center_x, center_y),
-                            "last_seen": frame_number,
-                            "active": True,
-                            "bbox": (x1, y1, x2, y2),
-                            "confidence": confidence,
-                        }
-                    )
+                    if distance < adaptive_threshold and matched_id is None:
+                        matched_id = track_id
 
-                    # Increment count only if vehicle crossed the line
-                    if crossed_line and not tracked_vehicles[track_id].get(
-                        "counted", False
-                    ):
+            # Jika cocok dengan objek yang ada, update informasinya
+            if matched_id is not None:
+                track_id = matched_id
+                previous_y = tracked_vehicles[track_id]["centroid"][1]
+
+                # Check if vehicle crossed the counting line from top to bottom
+                crossed_line = (
+                    previous_y < counting_line_y and center_y >= counting_line_y
+                )
+
+                # Update tracking info
+                tracked_vehicles[track_id].update(
+                    {
+                        "centroid": (center_x, center_y),
+                        "last_seen": frame_number,
+                        "active": True,
+                        "bbox": (x1, y1, x2, y2),
+                        "confidence": confidence,
+                        "fingerprint": obj_fingerprint,
+                    }
+                )
+
+                # Create a unique vehicle signature to prevent multiple counting
+                vehicle_signature = f"{track_id}_{vehicle_type}"
+
+                # Check if enough frames have passed since this fingerprint was last counted
+                last_counted_frame = tracked_vehicles[track_id].get(
+                    "last_counted_frame", -min_frames_between_counts
+                )
+                enough_frames_passed = (
+                    frame_number - last_counted_frame
+                ) >= min_frames_between_counts
+
+                # Increment count only if vehicle crossed the line and hasn't been counted already
+                if (
+                    crossed_line
+                    and not tracked_vehicles[track_id].get("counted", False)
+                    and vehicle_signature not in unique_counted_vehicles
+                    and obj_fingerprint not in object_fingerprints
+                    and enough_frames_passed
+                ):
+                    # Check if centroid is in the middle 80% of the frame width to avoid edge cases
+                    if 0.1 * frame_width < center_x < 0.9 * frame_width:
                         # Mark as counted to avoid counting the same vehicle multiple times
                         tracked_vehicles[track_id]["counted"] = True
+                        tracked_vehicles[track_id]["last_counted_frame"] = frame_number
+                        unique_counted_vehicles.add(vehicle_signature)
+                        object_fingerprints.add(obj_fingerprint)
                         frame_counts[vehicle_type] += 1
 
                         # Add visual indicator for counting
                         cv2.circle(
-                            annotated_frame, (center_x, center_y), 10, (0, 0, 255), -1
+                            annotated_frame,
+                            (center_x, center_y),
+                            10,
+                            (0, 0, 255),
+                            -1,
                         )
                         cv2.putText(
                             annotated_frame,
@@ -289,70 +453,74 @@ def process_frame(
                             (0, 0, 255),
                             2,
                         )
-                else:
-                    # Buat ID tracking baru
-                    track_id = next_track_id
-                    next_track_id += 1
-                    tracked_vehicles[track_id] = {
-                        "type": vehicle_type,
-                        "centroid": (center_x, center_y),
-                        "first_seen": frame_number,
-                        "last_seen": frame_number,
-                        "active": True,
-                        "bbox": (x1, y1, x2, y2),
-                        "confidence": confidence,
-                        "counted": False,  # Initialize as not counted
-                    }
-
-                    # Check if the vehicle starts below the counting line
-                    # If so, mark it as already counted to avoid false counts
-                    if center_y >= counting_line_y:
-                        tracked_vehicles[track_id]["counted"] = True
-
-                current_tracked_ids.add(track_id)
-
-                # Tambahkan ke daftar objek terdeteksi untuk frame ini
-                detected_objects.append(
-                    {
-                        "id": str(track_id),
-                        "type": vehicle_type,
-                        "bbox": [x1, y1, x2, y2],
-                        "confidence": float(confidence),
-                        "centroid": [center_x, center_y],
-                        "counted": tracked_vehicles[track_id].get("counted", False),
-                    }
-                )
-
-                # Calculate color based on vehicle type
-                color_map = {
-                    "car": (0, 255, 0),  # Green
-                    "motorcycle": (0, 255, 255),  # Yellow
-                    "bus": (255, 0, 0),  # Blue
-                    "truck": (255, 0, 255),  # Purple
+            else:
+                # Buat ID tracking baru
+                track_id = next_track_id
+                next_track_id += 1
+                tracked_vehicles[track_id] = {
+                    "type": vehicle_type,
+                    "centroid": (center_x, center_y),
+                    "first_seen": frame_number,
+                    "last_seen": frame_number,
+                    "active": True,
+                    "bbox": (x1, y1, x2, y2),
+                    "confidence": confidence,
+                    "counted": False,  # Initialize as not counted
+                    "fingerprint": obj_fingerprint,
                 }
-                color = color_map.get(vehicle_type, (255, 255, 255))
 
-                # Draw bounding box
-                cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), color, 2)
+                # Check if the vehicle starts below the counting line
+                # If so, mark it as already counted to avoid false counts
+                if center_y >= counting_line_y:
+                    tracked_vehicles[track_id]["counted"] = True
+                    tracked_vehicles[track_id]["last_counted_frame"] = frame_number
+                    # Add to unique counted vehicles set to prevent future double-counting
+                    unique_counted_vehicles.add(f"{track_id}_{vehicle_type}")
+                    object_fingerprints.add(obj_fingerprint)
 
-                # Add label with ID and confidence
-                label = f"{vehicle_type} #{track_id}" + (
-                    " (Counted)"
-                    if tracked_vehicles[track_id].get("counted", False)
-                    else ""
-                )
-                cv2.putText(
-                    annotated_frame,
-                    label,
-                    (x1, y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
-                    color,
-                    2,
-                )
+            current_tracked_ids.add(track_id)
 
-                # Draw centroid
-                cv2.circle(annotated_frame, (center_x, center_y), 3, color, -1)
+            # Tambahkan ke daftar objek terdeteksi untuk frame ini
+            detected_objects.append(
+                {
+                    "id": str(track_id),
+                    "type": vehicle_type,
+                    "bbox": [x1, y1, x2, y2],
+                    "confidence": float(confidence),
+                    "centroid": [center_x, center_y],
+                    "counted": tracked_vehicles[track_id].get("counted", False),
+                    "fingerprint": obj_fingerprint,
+                }
+            )
+
+            # Calculate color based on vehicle type
+            color_map = {
+                "car": (0, 255, 0),  # Green
+                "motorcycle": (0, 255, 255),  # Yellow
+                "bus": (255, 0, 0),  # Blue
+                "truck": (255, 0, 255),  # Purple
+            }
+            color = color_map.get(vehicle_type, (255, 255, 255))
+
+            # Draw bounding box
+            cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), color, 2)
+
+            # Add label with ID and confidence
+            label = f"{vehicle_type} #{track_id}" + (
+                " (Counted)" if tracked_vehicles[track_id].get("counted", False) else ""
+            )
+            cv2.putText(
+                annotated_frame,
+                label,
+                (x1, y1 - 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                color,
+                2,
+            )
+
+            # Draw centroid
+            cv2.circle(annotated_frame, (center_x, center_y), 3, color, -1)
 
     # Draw the counting line again on top of the annotations
     cv2.line(
@@ -385,16 +553,7 @@ def process_frame(
                 2,
             )
 
-    # Update status objek yang tidak terlihat di frame ini
-    for track_id in list(tracked_vehicles.keys()):
-        if track_id not in current_tracked_ids:
-            # Jika objek sudah tidak terlihat terlalu lama, hapus dari tracking
-            if (
-                frame_number - tracked_vehicles[track_id]["last_seen"]
-            ) > track_lifespan:
-                tracked_vehicles[track_id]["active"] = False
-
-    # Update total counts secara kumulatif
+    # Get the cumulative counts so far
     if "total_counts" not in results:
         results["total_counts"] = {"car": 0, "motorcycle": 0, "bus": 0, "truck": 0}
 
@@ -407,6 +566,117 @@ def process_frame(
     for vehicle_type, count in frame_counts.items():
         if vehicle_type in results["total_counts"]:
             results["total_counts"][vehicle_type] += count
+
+    # Draw total counts in the top-right corner with background
+    total_cars = results["total_counts"]["car"]
+    total_motorcycles = results["total_counts"]["motorcycle"]
+    total_buses = results["total_counts"]["bus"]
+    total_trucks = results["total_counts"]["truck"]
+
+    # Calculate how many rows we'll need to display
+    num_rows = 3  # Title + Total + blank space
+    if total_cars > 0:
+        num_rows += 1
+    if total_motorcycles > 0:
+        num_rows += 1
+    if total_buses > 0:
+        num_rows += 1
+    if total_trucks > 0:
+        num_rows += 1
+
+    # Create a semi-transparent background for the count display
+    overlay = annotated_frame.copy()
+    # Draw a black semi-transparent background rectangle
+    box_height = 30 + (num_rows * 30)
+    cv2.rectangle(
+        overlay, (frame_width - 250, 10), (frame_width - 10, box_height), (0, 0, 0), -1
+    )
+    # Apply the overlay with transparency
+    alpha = 0.6
+    cv2.addWeighted(overlay, alpha, annotated_frame, 1 - alpha, 0, annotated_frame)
+
+    # Draw title
+    cv2.putText(
+        annotated_frame,
+        "TOTAL KENDARAAN:",
+        (frame_width - 240, 35),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 255, 255),
+        2,
+    )
+
+    # Draw counts by vehicle type
+    y_pos = 65  # Starting y position
+
+    if total_cars > 0:
+        cv2.putText(
+            annotated_frame,
+            f"Mobil: {total_cars}",
+            (frame_width - 240, y_pos),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),  # Green for cars
+            2,
+        )
+        y_pos += 30
+
+    if total_motorcycles > 0:
+        cv2.putText(
+            annotated_frame,
+            f"Motor: {total_motorcycles}",
+            (frame_width - 240, y_pos),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 255),  # Yellow for motorcycles
+            2,
+        )
+        y_pos += 30
+
+    if total_buses > 0:
+        cv2.putText(
+            annotated_frame,
+            f"Bus: {total_buses}",
+            (frame_width - 240, y_pos),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (255, 0, 0),  # Blue for buses
+            2,
+        )
+        y_pos += 30
+
+    if total_trucks > 0:
+        cv2.putText(
+            annotated_frame,
+            f"Truk: {total_trucks}",
+            (frame_width - 240, y_pos),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (255, 0, 255),  # Purple for trucks
+            2,
+        )
+        y_pos += 30
+
+    # Draw total of all vehicles at the bottom
+    total_all = total_cars + total_motorcycles + total_buses + total_trucks
+    cv2.putText(
+        annotated_frame,
+        f"TOTAL: {total_all}",
+        (frame_width - 240, y_pos),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (255, 255, 255),  # White for total
+        2,
+    )
+
+    # Update status objek yang tidak terlihat di frame ini
+    for track_id in list(tracked_vehicles.keys()):
+        if track_id not in current_tracked_ids:
+            # Jika objek sudah tidak terlihat terlalu lama, hapus dari tracking
+            if (
+                frame_number - tracked_vehicles[track_id]["last_seen"]
+            ) > track_lifespan:
+                tracked_vehicles[track_id]["active"] = False
 
     # Add frame data with tracking info
     if "frames" not in results:
@@ -426,32 +696,30 @@ def process_frame(
 
 def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str, str]:
     """
-    Process a video file with YOLOv8 for vehicle detection with tracking
+    Process a video, detect and track vehicles
 
     Args:
-        video_path: Path to the input video file
-        file_id: Unique ID for the video
-        model_size: Size of the YOLOv8 model to use (nano, small, medium, large, x-large)
+        video_path (str): Path to the input video
+        file_id (str): Unique ID for the video
+        model_size (str, optional): Size of the YOLOv8 model. Defaults to "nano".
 
     Returns:
-        Tuple containing:
-        - Path to the processed video file with bounding boxes
-        - Path to the JSON file with detection results
+        Tuple[str, str]: Paths to the processed video and JSON results
     """
-    # Reset tracking variables
-    global tracked_vehicles, next_track_id
+    global tracked_vehicles, next_track_id, unique_counted_vehicles, object_fingerprints
+
+    # Reset tracking for this video
     tracked_vehicles = {}
     next_track_id = 1
+    unique_counted_vehicles = set()
+    object_fingerprints = set()
 
-    # Create results directory if it doesn't exist
-    os.makedirs("results", exist_ok=True)
-
-    # Save thumbnail for preview
-    thumbnail_path = f"results/{file_id}_thumbnail.jpg"
-
-    # Log processing start with model information
-    logger.info(f"Processing video {file_id} with model size: {model_size}")
+    logger.info(f"Starting video processing with {model_size} model")
     start_time = time.time()
+
+    # Path for saving thumbnail
+    thumbnail_path = f"results/{file_id}_thumbnail.jpg"
+    json_path = f"results/{file_id}_results.json"
 
     try:
         # Initialize video capture
@@ -488,7 +756,20 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
             "counted_vehicles": {"car": 0, "motorcycle": 0, "bus": 0, "truck": 0},
             "counting_line": {
                 "description": "Objects counted when they cross this line from top to bottom",
-                "y_position_percentage": 0.8,
+                "y_position_percentage": 0.6,  # Updated to match the 60% used in process_frame
+            },
+            "debug_info": {
+                "detection_parameters": {
+                    "confidence_threshold": 0.4,  # Updated from 0.3
+                    "min_size_percentage": 0.03,  # Updated from 0.02
+                    "tracking_method": "IoU + Distance with Duplicate Filtering",
+                    "iou_threshold": MIN_IOU_THRESHOLD,
+                    "duplicate_detection_threshold": duplicate_detection_threshold,
+                    "distance_threshold_factor": 0.15,
+                    "track_lifespan": track_lifespan,
+                    "unique_counting": "Multiple methods: track_id+type signature, object fingerprint, minimum frames between counts",
+                    "min_frames_between_counts": min_frames_between_counts,
+                }
             },
         }
 
@@ -503,75 +784,105 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
 
         # Adjust sampling rate based on video length and model size
         if total_frames > 500:
-            sampling_rate = 2
+            sampling_rate = 2  # Process every other frame for longer videos
         if total_frames > 1000:
-            sampling_rate = 3
-        if total_frames > 3000:
-            sampling_rate = 4
+            sampling_rate = 3  # Process every third frame for very long videos
 
-        # Further increase sampling rate for larger models
+        # Increase sampling rate for larger models (they're slower)
         if model_size in ["medium", "large", "x-large"]:
             sampling_rate += 1
 
         logger.info(
-            f"Using frame sampling rate: {sampling_rate} (processing every {sampling_rate}th frame)"
+            f"Using sampling rate: {sampling_rate} (processing 1/{sampling_rate} frames)"
         )
 
-        # Check if CUDA is available and log
-        device = "cuda:0" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Using device for inference: {device}")
+        # Dictionary to track stability metrics
+        stability_metrics = {
+            "detection_counts": [],
+            "vehicle_types": [],
+        }
 
-        # Load model ahead of time to avoid loading during frame processing
-        model = get_model(model_size)
-        logger.info(f"Pre-loaded model {model_size}")
-
-        # Process frames
-        while cap.isOpened():
+        while True:
             ret, frame = cap.read()
             if not ret:
                 break
 
-            # Capture thumbnail around 25% of the video
+            frame_count += 1
+
+            # Reduce processing load by skipping frames according to sampling rate
+            if frame_count % sampling_rate != 0 and frame_count > 1:
+                continue
+
+            # Skip frames at the beginning (often contain fade-in effects or uninteresting content)
+            if (
+                frame_count < fps * 1 and total_frames > fps * 10
+            ):  # Skip first second if video is > 10 seconds
+                continue
+
+            # Capture thumbnail at 25% of the video
             if not thumbnail_captured and frame_count >= total_frames * 0.25:
                 cv2.imwrite(thumbnail_path, frame)
                 thumbnail_captured = True
+                logger.info(f"Captured thumbnail at frame {frame_count}")
 
-            # Only process every Nth frame to speed up processing
             try:
-                if frame_count % sampling_rate == 0:
-                    # Ensure frame is not None and has proper dimensions
-                    if frame is None or frame.size == 0:
-                        logger.warning(f"Empty frame detected at frame {frame_count}")
-                        continue
+                # Process frame for vehicle detection
+                processed_frame, updated_results = process_frame(
+                    frame, results, model_size, processed_count
+                )
+                processed_count += 1
 
-                    # Process frame with model
-                    annotated_frame, results = process_frame(
-                        frame, results, model_size, frame_count
+                # Collect stability metrics
+                current_frame_data = updated_results["frames"][-1]
+                stability_metrics["detection_counts"].append(
+                    len(current_frame_data.get("tracked_objects", []))
+                )
+                vehicle_types_in_frame = {}
+                for obj in current_frame_data.get("tracked_objects", []):
+                    vtype = obj.get("type", "unknown")
+                    vehicle_types_in_frame[vtype] = (
+                        vehicle_types_in_frame.get(vtype, 0) + 1
                     )
-                    out.write(annotated_frame)
-                    processed_count += 1
-                else:
-                    # Just write the original frame
-                    out.write(frame)
+                stability_metrics["vehicle_types"].append(vehicle_types_in_frame)
+
+                # Add timestamp to show progress
+                cv2.putText(
+                    processed_frame,
+                    f"Frame: {frame_count}/{total_frames}",
+                    (width - 200, height - 20),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (255, 255, 255),
+                    1,
+                )
+
+                # Write processed frame to output video
+                out.write(processed_frame)
+
+                # Update results with latest data
+                results = updated_results
+
             except Exception as e:
                 logger.error(f"Error processing frame {frame_count}: {str(e)}")
-                logger.error(traceback.format_exc())
-                # Write the original frame if there's an error
-                out.write(frame)
+                traceback.print_exc()
 
-            frame_count += 1
+                # Add empty frame data to maintain consistency
+                if "frames" in results:
+                    results["frames"].append(
+                        {
+                            "frame_number": len(results["frames"]),
+                            "counts": {"car": 0, "motorcycle": 0, "bus": 0, "truck": 0},
+                            "tracked_objects": [],
+                            "error": str(e),
+                        }
+                    )
 
-            # Add progress indicator to console
-            if frame_count % 30 == 0:
-                percent = (frame_count / total_frames) * 100
+            # Log progress periodically
+            if frame_count % (50 * sampling_rate) == 0:
                 elapsed = time.time() - start_time
-                eta = (
-                    (elapsed / frame_count) * (total_frames - frame_count)
-                    if frame_count > 0
-                    else 0
-                )
+                progress = frame_count / total_frames * 100 if total_frames > 0 else 0
                 logger.info(
-                    f"Processing video: {percent:.1f}% complete, ETA: {eta:.1f}s"
+                    f"Progress: {progress:.1f}% ({frame_count}/{total_frames}) - Time elapsed: {elapsed:.1f}s"
                 )
 
         # Make sure we have a thumbnail even if we didn't get to 25%
@@ -590,6 +901,20 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
         # If we didn't process any frames successfully, raise an error
         if processed_count == 0:
             raise Exception("Failed to process any frames in the video")
+
+        # Calculate detection stability metrics
+        if stability_metrics["detection_counts"]:
+            results["debug_info"]["stability"] = {
+                "avg_detections_per_frame": sum(stability_metrics["detection_counts"])
+                / len(stability_metrics["detection_counts"]),
+                "max_detections": max(stability_metrics["detection_counts"]),
+                "min_detections": min(stability_metrics["detection_counts"]),
+                "detection_variance": (
+                    np.var(stability_metrics["detection_counts"])
+                    if len(stability_metrics["detection_counts"]) > 1
+                    else 0
+                ),
+            }
 
         # Count unique vehicles tracked and those that were counted (crossed the line)
         for track_id, vehicle_info in tracked_vehicles.items():
@@ -615,87 +940,29 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
                 else 0
             ),
             "total_vehicles_counted": total_counted,
-            "counting_method": "Line crossing (bottom 80% of frame)",
+            "counting_method": "Line crossing (bottom 60% of frame)",
         }
 
         # Update total_counts to reflect only the counted vehicles (line crossings)
         results["total_counts"] = results["counted_vehicles"]
 
-        logger.info(f"Video processing completed in {processing_time:.2f} seconds")
-        logger.info(
-            f"Detected {sum(results.get('unique_vehicles', {}).values())} unique vehicles in total"
-        )
-        logger.info(f"Counted {total_counted} vehicles crossing the counting line")
-
-        # Save JSON results
-        json_path = f"results/{file_id}_results.json"
+        # Save results to JSON file
         with open(json_path, "w") as f:
-            json.dump(results, f, indent=4)
+            json.dump(results, f, indent=2)
 
         # Release resources
         cap.release()
         out.release()
 
-        # Verify the results are valid and have tracked objects
-        with open(json_path, "r") as f:
-            saved_results = json.load(f)
-
-        # Log information about saved results
-        frames_count = len(saved_results.get("frames", []))
-        tracked_objects_count = 0
-        counted_objects = 0
-
-        for frame in saved_results.get("frames", []):
-            if "tracked_objects" in frame:
-                tracked_objects_count += len(frame.get("tracked_objects", []))
-                for obj in frame.get("tracked_objects", []):
-                    if obj.get("counted", False):
-                        counted_objects += 1
-
         logger.info(
-            f"Saved results have {frames_count} frames with {tracked_objects_count} total tracked objects and {counted_objects} counted objects"
+            f"Video processing completed in {processing_time:.2f} seconds. "
+            f"Total vehicles detected: {sum(results['unique_vehicles'].values())}, "
+            f"Vehicles counted: {total_counted}"
         )
 
         return result_path, json_path
 
     except Exception as e:
-        # Clean up resources on error
-        logger.error(f"Error during video processing: {str(e)}")
-        logger.error(traceback.format_exc())
-
-        try:
-            if "cap" in locals() and cap.isOpened():
-                cap.release()
-            if "out" in locals() and out.isOpened():
-                out.release()
-        except Exception as cleanup_error:
-            logger.error(f"Error during cleanup: {str(cleanup_error)}")
-
-        # Create minimal JSON result in case of error
-        error_json_path = f"results/{file_id}_results.json"
-        error_result = {
-            "video_id": file_id,
-            "total_frames": 0,
-            "fps": 0,
-            "resolution": "0x0",
-            "model_used": model_size,
-            "thumbnail_path": thumbnail_path,
-            "error": str(e),
-            "frames": [],
-            "unique_vehicles": {"car": 0, "motorcycle": 0, "bus": 0, "truck": 0},
-            "processing_stats": {
-                "processed_frames": 0,
-                "total_frames": 0,
-                "processing_time_seconds": time.time() - start_time,
-                "frames_per_second": 0,
-                "vehicle_density": 0,
-            },
-        }
-
-        try:
-            with open(error_json_path, "w") as f:
-                json.dump(error_result, f, indent=4)
-        except Exception as json_error:
-            logger.error(f"Error saving error JSON: {str(json_error)}")
-
+        logger.error(f"Error processing video: {str(e)}")
+        traceback.print_exc()
         raise
