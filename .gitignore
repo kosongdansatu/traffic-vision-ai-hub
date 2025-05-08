@@ -1,62 +1,60 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Models - AI model files
+models/*.pt
+models/*.pth
+models/*.onnx
+backend/models/*.pt
+backend/models/*.pth
+backend/models/*.onnx
 
-# Build Output Directories
-dist
-dist-ssr
-build
-public
-*.local
-
-# Node.js Modules
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Python Bytecode
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-*.egg-info/
-.env
-.env.*
-
+# Uploads - User uploaded videos
+uploads/*
+!uploads/.gitkeep
 backend/uploads/*
 !backend/uploads/.gitkeep
+public/lovable-uploads/*
+!public/lovable-uploads/.gitkeep
+
+# Results - Processed videos and thumbnails
+results/*
+!results/.gitkeep
 backend/results/*
 !backend/results/.gitkeep
 
+# Database files
+*.db
+app.db
+backend/*.db
 
-# OS-specific files
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and dependencies
+venv/
+ENV/
+.env
+.venv
+node_modules/
+
+# Large specific node modules
+node_modules/@swc/core-darwin-x64/swc.darwin-x64.node
+
+# Logs
+*.log
+logs/
+
+# OS specific files
 .DS_Store
 Thumbs.db
 
-# Temporary editor files
-.vscode/
+# IDE files
 .idea/
+.vscode/
 *.swp
+*.swo
 
-# Optional: Lock files (uncomment if you prefer not to track lock files)
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
+# Temporary files
+.tmp/
+.temp/
+tmp/
