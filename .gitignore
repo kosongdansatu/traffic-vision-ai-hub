@@ -41,11 +41,11 @@ __pycache__/
 .env
 .env.*
 
-# Uploads & Results (keep folders empty in repo)
-uploads/*
-!uploads/.gitkeep
-results/*
-!results/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/results/*
+!backend/results/.gitkeep
+
 
 # OS-specific files
 .DS_Store
