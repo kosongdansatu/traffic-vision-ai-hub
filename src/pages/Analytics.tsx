@@ -24,7 +24,7 @@ import {
 } from "recharts";
 
 // Helper function to aggregate vehicle data from videos
-const aggregateVehicleData = (videos: any[], resultsMap: Record<number, any>) => {
+const aggregateVehicleData = (videos: any[], resultsMap: Record<number, any>, selectedVideoId: number | null) => {
   // Initialize vehicle counts
   const vehicleCounts = {
     car: 0,
@@ -35,18 +35,71 @@ const aggregateVehicleData = (videos: any[], resultsMap: Record<number, any>) =>
   
   // Count vehicles from video results
   videos.forEach(video => {
+    // Skip if not the selected video (when a specific video is selected)
+    if (selectedVideoId && video.id !== selectedVideoId) return;
+    
     if (video.status === 'completed' && resultsMap[video.id]) {
       const results = resultsMap[video.id];
       if (results.total_counts) {
-        vehicleCounts.car += results.total_counts.car || 0;
-        vehicleCounts.truck += results.total_counts.truck || 0;
-        vehicleCounts.bus += results.total_counts.bus || 0;
-        vehicleCounts.motorcycle += results.total_counts.motorcycle || 0;
+        vehicleCounts.car += Number(results.total_counts.car) || 0;
+        vehicleCounts.truck += Number(results.total_counts.truck) || 0;
+        vehicleCounts.bus += Number(results.total_counts.bus) || 0;
+        vehicleCounts.motorcycle += Number(results.total_counts.motorcycle) || 0;
       }
     }
   });
   
   return vehicleCounts;
+};
+
+// Helper function to extract real hourly data from frame timestamps
+const extractHourlyData = (resultsMap: Record<number, any>, selectedVideoId: number | null) => {
+  // Initialize hourly data structure
+  const hourlyData: Record<string, { car: number, truck: number, bus: number, motorcycle: number, total: number }> = {};
+  for (let i = 0; i < 24; i++) {
+    const hour = i.toString().padStart(2, '0');
+    hourlyData[hour] = { car: 0, truck: 0, bus: 0, motorcycle: 0, total: 0 };
+  }
+  
+  // Extract hourly data from each video's frames
+  Object.entries(resultsMap).forEach(([videoId, results]) => {
+    // Skip if not the selected video (when a specific video is selected)
+    if (selectedVideoId && Number(videoId) !== selectedVideoId) return;
+    
+    if (results && results.frames) {
+      // Process each frame
+      results.frames.forEach((frame: any) => {
+        if (frame.timestamp) {
+          // Extract hour from timestamp
+          const timestamp = new Date(frame.timestamp);
+          const hour = timestamp.getHours().toString().padStart(2, '0');
+          
+          // Add vehicle counts for this hour
+          if (frame.counts) {
+            hourlyData[hour].car += Number(frame.counts.car) || 0;
+            hourlyData[hour].truck += Number(frame.counts.truck) || 0;
+            hourlyData[hour].bus += Number(frame.counts.bus) || 0;
+            hourlyData[hour].motorcycle += Number(frame.counts.motorcycle) || 0;
+            
+            // Calculate total for this hour
+            const hourTotal = (
+              Number(frame.counts.car || 0) + 
+              Number(frame.counts.truck || 0) + 
+              Number(frame.counts.bus || 0) + 
+              Number(frame.counts.motorcycle || 0)
+            );
+            hourlyData[hour].total += hourTotal;
+          }
+        }
+      });
+    }
+  });
+  
+  // Convert to array format for chart
+  return Object.entries(hourlyData).map(([hour, counts]) => ({
+    hour,
+    ...counts
+  }));
 };
 
 const COLORS = {
@@ -59,6 +112,7 @@ const COLORS = {
 const Analytics = () => {
   const [timeFilter, setTimeFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
+  const [selectedVideoId, setSelectedVideoId] = useState<number | null>(null);
   
   // Fetch all videos
   const { data: videos = [], isLoading: isLoadingVideos } = useQuery({
@@ -102,8 +156,8 @@ const Analytics = () => {
   
   // Calculate aggregated stats
   const vehicleCounts = React.useMemo(() => {
-    return aggregateVehicleData(completedVideos, resultsMap);
-  }, [completedVideos, resultsMap]);
+    return aggregateVehicleData(completedVideos, resultsMap, selectedVideoId);
+  }, [completedVideos, resultsMap, selectedVideoId]);
   
   const totalVehicles = React.useMemo(() => {
     return Object.values(vehicleCounts).reduce((a, b) => a + b, 0);
@@ -134,15 +188,18 @@ const Analytics = () => {
     
     // Distribute the counts across days based on creation date
     completedVideos.forEach(video => {
+      // Skip if not the selected video (when a specific video is selected)
+      if (selectedVideoId && video.id !== selectedVideoId) return;
+      
       const result = resultsMap[video.id];
       if (result && result.total_counts) {
         const date = new Date(video.created_at);
         const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
         
-        dayData[day].car += result.total_counts.car || 0;
-        dayData[day].truck += result.total_counts.truck || 0;
-        dayData[day].bus += result.total_counts.bus || 0;
-        dayData[day].motorcycle += result.total_counts.motorcycle || 0;
+        dayData[day].car += Number(result.total_counts.car) || 0;
+        dayData[day].truck += Number(result.total_counts.truck) || 0;
+        dayData[day].bus += Number(result.total_counts.bus) || 0;
+        dayData[day].motorcycle += Number(result.total_counts.motorcycle) || 0;
       }
     });
     
@@ -151,15 +208,28 @@ const Analytics = () => {
       day,
       ...counts
     }));
-  }, [completedVideos, resultsMap]);
+  }, [completedVideos, resultsMap, selectedVideoId]);
   
-  // Generate hourly distribution based on actual frames from all videos
+  // Extract real hourly data if available, otherwise use the estimation
   const hourlyDistribution = React.useMemo(() => {
-    if (Object.keys(resultsMap).length === 0) return [];
+    // Try to get real hourly data from frames first
+    const realHourlyData = extractHourlyData(resultsMap, selectedVideoId);
     
+    // Check if we have meaningful real data
+    const hasRealData = realHourlyData.some(hour => hour.total > 0);
+    
+    if (hasRealData) {
+      return realHourlyData;
+    }
+    
+    // Fallback to estimate if no real data available
     const hourCounts = Array(24).fill(0).map((_, i) => ({
       hour: i.toString().padStart(2, '0'),
-      count: 0
+      car: 0,
+      truck: 0, 
+      bus: 0,
+      motorcycle: 0,
+      total: 0
     }));
     
     // Aggregate counts by distributing total vehicles across hours
@@ -176,14 +246,30 @@ const Analytics = () => {
       
       // Distribute total vehicles by hour based on percentages
       hourCounts.forEach((hour, index) => {
-        hour.count = Math.round(totalVehicles * (hourlyDistribution[index] / totalPercentage));
+        hour.total = Math.round(totalVehicles * (hourlyDistribution[index] / totalPercentage));
+        
+        // Distribute by vehicle type proportionally
+        const totalByType = Object.values(vehicleCounts).reduce((a, b) => a + b, 0);
+        if (totalByType > 0) {
+          hour.car = Math.round(hour.total * (vehicleCounts.car / totalByType));
+          hour.truck = Math.round(hour.total * (vehicleCounts.truck / totalByType));
+          hour.bus = Math.round(hour.total * (vehicleCounts.bus / totalByType));
+          hour.motorcycle = Math.round(hour.total * (vehicleCounts.motorcycle / totalByType));
+        }
       });
     }
     
     return hourCounts;
-  }, [totalVehicles, resultsMap]);
+  }, [totalVehicles, resultsMap, vehicleCounts, selectedVideoId]);
 
   const isLoading = isLoadingVideos || isLoadingResults;
+
+  // Get currently selected video name
+  const selectedVideoName = React.useMemo(() => {
+    if (!selectedVideoId) return "All Videos";
+    const video = completedVideos.find(v => v.id === selectedVideoId);
+    return video ? video.name : "Unknown Video";
+  }, [selectedVideoId, completedVideos]);
 
   return (
     <DashboardLayout>
@@ -229,6 +315,23 @@ const Analytics = () => {
                   </SelectContent>
                 </Select>
                 
+                <Select 
+                  value={selectedVideoId ? selectedVideoId.toString() : "all"} 
+                  onValueChange={(value) => setSelectedVideoId(value === "all" ? null : parseInt(value))}
+                >
+                  <SelectTrigger className="w-[240px]">
+                    <SelectValue placeholder="Select Video" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Videos</SelectItem>
+                    {completedVideos.map(video => (
+                      <SelectItem key={video.id} value={video.id.toString()}>
+                        {video.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
                 <Select value={locationFilter} onValueChange={setLocationFilter}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select Location" />
@@ -243,6 +346,16 @@ const Analytics = () => {
                 </Select>
               </div>
             </div>
+            
+            {selectedVideoId && (
+              <div className="bg-muted p-3 rounded-md mb-4">
+                <h2 className="text-lg font-semibold mb-1">Analytics for: {selectedVideoName}</h2>
+                <p className="text-sm text-muted-foreground">
+                  Showing data specifically for this video. <Button variant="link" className="p-0 h-auto" onClick={() => setSelectedVideoId(null)}>View all videos</Button>
+                </p>
+              </div>
+            )}
+            
             <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium">Total Vehicles</CardTitle>
@@ -252,7 +365,10 @@ const Analytics = () => {
                     {totalVehicles}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Across {completedVideos.length} processed videos
+                    {selectedVideoId 
+                      ? `In selected video: ${selectedVideoName}`
+                      : `Across ${completedVideos.length} processed videos`
+                    }
                   </p>
                 </CardContent>
               </Card>
@@ -311,11 +427,11 @@ const Analytics = () => {
               </Card>
             </div>
 
-            <Tabs defaultValue="overview" className="w-full">
+            <Tabs defaultValue="overview" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="hourly">Hourly Analysis</TabsTrigger>
                 <TabsTrigger value="trends">Trends</TabsTrigger>
-                <TabsTrigger value="distribution">Distribution</TabsTrigger>
               </TabsList>
               
               <TabsContent value="overview" className="space-y-4">
@@ -323,9 +439,7 @@ const Analytics = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle>Vehicle Distribution</CardTitle>
-                      <CardDescription>
-                        Breakdown of detected vehicles by type
-                      </CardDescription>
+                      <CardDescription>Vehicle types detected</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                       <ResponsiveContainer width="100%" height="100%">
@@ -338,13 +452,13 @@ const Analytics = () => {
                             outerRadius={80}
                             fill="#8884d8"
                             dataKey="value"
-                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                           >
                             {pieData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS]} />
+                              <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS] || "#999"} />
                             ))}
                           </Pie>
-                          <Tooltip />
+                          <Tooltip formatter={(value) => [value, "Count"]} />
                           <Legend />
                         </PieChart>
                       </ResponsiveContainer>
@@ -375,12 +489,17 @@ const Analytics = () => {
                     </CardContent>
                   </Card>
                 </div>
-
+              </TabsContent>
+              
+              <TabsContent value="hourly" className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Hourly Traffic Distribution</CardTitle>
                     <CardDescription>
-                      Total vehicle count by hour of day
+                      {selectedVideoId ? 
+                        "Vehicle counts by hour for the selected video" : 
+                        "Aggregated vehicle counts by hour of day across all videos"
+                      }
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="h-[300px]">
@@ -390,9 +509,21 @@ const Analytics = () => {
                         <XAxis dataKey="hour" />
                         <YAxis />
                         <Tooltip />
-                        <Bar dataKey="count" fill="#3b82f6" name="Vehicles" />
+                        <Legend />
+                        <Bar dataKey="car" fill="#FF6B6B" name="Cars" stackId="a" />
+                        <Bar dataKey="truck" fill="#4ECDC4" name="Trucks" stackId="a" />
+                        <Bar dataKey="bus" fill="#FFA400" name="Buses" stackId="a" />
+                        <Bar dataKey="motorcycle" fill="#7D83FF" name="Motorcycles" stackId="a" />
                       </BarChart>
                     </ResponsiveContainer>
+                  </CardContent>
+                  <CardContent className="pt-0 border-t">
+                    <p className="text-sm text-muted-foreground">
+                      {selectedVideoId ? 
+                        "Data shows actual detection counts per hour for this video." : 
+                        "When no timestamp data is available, hourly distribution is estimated based on typical traffic patterns."
+                      }
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -430,76 +561,6 @@ const Analytics = () => {
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>
-              </TabsContent>
-              
-              <TabsContent value="distribution" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Vehicle Type Distribution</CardTitle>
-                      <CardDescription>
-                        Proportion of vehicle types detected
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={pieData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            outerRadius={80}
-                            fill="#8884d8"
-                            dataKey="value"
-                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                          >
-                            {pieData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS]} />
-                            ))}
-                          </Pie>
-                          <Tooltip />
-                          <Legend />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Video Comparison</CardTitle>
-                      <CardDescription>
-                        Vehicle counts across processed videos
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={Object.entries(resultsMap).map(([id, result]) => {
-                            const video = completedVideos.find(v => v.id === parseInt(id));
-                            return {
-                              name: video ? video.name.substring(0, 15) + (video.name.length > 15 ? "..." : "") : `Video ${id}`,
-                              car: result.total_counts?.car || 0,
-                              truck: result.total_counts?.truck || 0,
-                              bus: result.total_counts?.bus || 0,
-                              motorcycle: result.total_counts?.motorcycle || 0
-                            };
-                          })}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Bar dataKey="car" fill="#FF6B6B" name="Cars" />
-                          <Bar dataKey="truck" fill="#4ECDC4" name="Trucks" />
-                          <Bar dataKey="bus" fill="#FFA400" name="Buses" />
-                          <Bar dataKey="motorcycle" fill="#7D83FF" name="Motorcycles" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                </div>
               </TabsContent>
             </Tabs>
           </>
