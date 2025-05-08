@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { UploadCloud, AlertCircle, PlayCircle, BarChart4, Clock } from "lucide-react";
+import { UploadCloud, AlertCircle, PlayCircle, BarChart4, Clock, Car, Truck, Bike, Bus, Eye } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { videoService } from "@/services/api";
@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const Dashboard = () => {
   const { user } = useAuth();
   const [totalVehicles, setTotalVehicles] = useState(0);
+  const [vehicleTypes, setVehicleTypes] = useState({ car: 0, motorcycle: 0, bus: 0, truck: 0 });
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
   const { data: videos = [], isLoading, error } = useQuery({
@@ -27,6 +28,7 @@ const Dashboard = () => {
     
     const fetchTotalVehicles = async () => {
       let total = 0;
+      const vehicleCounts = { car: 0, motorcycle: 0, bus: 0, truck: 0 };
       const completedVideos = videos.filter(video => video.status === 'completed');
       
       for (const video of completedVideos) {
@@ -34,7 +36,14 @@ const Dashboard = () => {
           const results = await videoService.getVideoResults(video.id);
           if (results && results.total_counts) {
             // Sum all vehicle types
-            total += Object.values(results.total_counts).reduce((sum: number, count: number) => sum + count, 0);
+            const countValues = Object.values(results.total_counts) as number[];
+            total += countValues.reduce((sum: number, count: number) => sum + Number(count), 0);
+            
+            // Add to vehicle type counts
+            if (results.total_counts.car) vehicleCounts.car += Number(results.total_counts.car) || 0;
+            if (results.total_counts.motorcycle) vehicleCounts.motorcycle += Number(results.total_counts.motorcycle) || 0;
+            if (results.total_counts.bus) vehicleCounts.bus += Number(results.total_counts.bus) || 0;
+            if (results.total_counts.truck) vehicleCounts.truck += Number(results.total_counts.truck) || 0;
           }
         } catch (err) {
           console.error(`Error fetching results for video ${video.id}:`, err);
@@ -42,6 +51,7 @@ const Dashboard = () => {
       }
       
       setTotalVehicles(total);
+      setVehicleTypes(vehicleCounts);
     };
     
     fetchTotalVehicles();
@@ -93,7 +103,7 @@ const Dashboard = () => {
           </Alert>
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Videos</CardTitle>
@@ -126,7 +136,7 @@ const Dashboard = () => {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Estimated Vehicles
+                    Total Vehicles
                   </CardTitle>
                   <Clock className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
@@ -137,7 +147,76 @@ const Dashboard = () => {
                   </p>
                 </CardContent>
               </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Processing Status
+                  </CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center space-x-2">
+                    <Progress value={(videos.filter(v => v.status === 'completed').length / Math.max(1, videos.length)) * 100} />
+                    <span className="text-sm text-muted-foreground">
+                      {Math.round((videos.filter(v => v.status === 'completed').length / Math.max(1, videos.length)) * 100)}%
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Completion rate of video processing
+                  </p>
+                </CardContent>
+              </Card>
             </div>
+
+            {/* Vehicle Types Detection Summary */}
+            {totalVehicles > 0 && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Vehicle Types Detected</CardTitle>
+                  <CardDescription>Summary of detected vehicle types across all videos</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="p-2 bg-red-100 rounded-full">
+                        <Car className="h-5 w-5 text-red-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Cars</p>
+                        <p className="text-2xl font-bold">{vehicleTypes.car}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="p-2 bg-yellow-100 rounded-full">
+                        <Bike className="h-5 w-5 text-yellow-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Motorcycles</p>
+                        <p className="text-2xl font-bold">{vehicleTypes.motorcycle}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="p-2 bg-blue-100 rounded-full">
+                        <Bus className="h-5 w-5 text-blue-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Buses</p>
+                        <p className="text-2xl font-bold">{vehicleTypes.bus}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="p-2 bg-purple-100 rounded-full">
+                        <Truck className="h-5 w-5 text-purple-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Trucks</p>
+                        <p className="text-2xl font-bold">{vehicleTypes.truck}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Recent Videos</h2>
@@ -198,109 +277,87 @@ const Dashboard = () => {
                                       videoElement.style.display = 'none';
                                       // Create a fallback element
                                       const fallback = document.createElement('div');
-                                      fallback.className = 'h-full w-full flex items-center justify-center bg-gray-800 text-white';
-                                      fallback.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>';
+                                      fallback.className = 'flex items-center justify-center h-full bg-slate-200';
+                                      fallback.textContent = 'Preview not available';
                                       parent.appendChild(fallback);
                                     };
                                   } else {
-                                    // Create a video element if it doesn't exist
+                                    // No video element, create one
                                     videoElement = document.createElement('video');
-                                    videoElement.className = 'h-full w-full object-cover hover:opacity-90 transition-opacity';
+                                    videoElement.className = 'h-full w-full object-cover';
                                     videoElement.src = `${apiUrl}/${video.result_path}`;
-                                    videoElement.muted = true;
-                                    videoElement.style.display = 'block';
+                                    videoElement.controls = true;
+                                    parent.appendChild(videoElement);
                                     
-                                    // Add mouse event handlers
-                                    videoElement.onmouseover = () => {
-                                      videoElement.play().catch(err => console.error("Autoplay failed:", err));
-                                    };
-                                    videoElement.onmouseout = () => {
-                                      videoElement.pause();
-                                      videoElement.currentTime = 0;
-                                    };
-                                    
-                                    // Handle video error
+                                    // Handle error
                                     videoElement.onerror = () => {
-                                      console.error("Video load error in newly created element");
+                                      console.error("Video element creation error");
                                       videoElement.style.display = 'none';
-                                      // Create a fallback element with PlayCircle icon
+                                      // Create a fallback element
                                       const fallback = document.createElement('div');
-                                      fallback.className = 'h-full w-full flex items-center justify-center bg-gray-800 text-white';
-                                      fallback.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>';
+                                      fallback.className = 'flex items-center justify-center h-full bg-slate-200';
+                                      fallback.textContent = 'Preview not available';
                                       parent.appendChild(fallback);
                                     };
                                     
-                                    parent.appendChild(videoElement);
+                                    // Try to load the video
+                                    videoElement.load();
                                   }
                                 }
                               }}
                             />
                           ) : (
-                            <div className="h-full w-full flex items-center justify-center bg-gray-800 text-white">
-                              <PlayCircle className="h-12 w-12 opacity-50" />
+                            <div className="flex items-center justify-center h-full bg-slate-200">
+                              Processing completed - View details
                             </div>
                           )}
                         </Link>
                       ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-gray-800 text-white">
-                          <PlayCircle className="h-12 w-12 opacity-50" />
+                        <div className="flex flex-col items-center justify-center h-full bg-slate-200 p-4">
+                          {video.status === "processing" ? (
+                            <>
+                              <span className="text-sm font-medium mb-2">Processing...</span>
+                              <Progress className="w-2/3" value={75} />
+                            </>
+                          ) : (
+                            <span className="text-sm font-medium">{video.status || "Pending"}</span>
+                          )}
                         </div>
                       )}
-                      {video.status === "processing" && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                          <div className="flex flex-col items-center space-y-2 text-white">
-                            <p>Processing...</p>
-                            <Progress value={50} className="w-24" />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{video.name}</CardTitle>
-                        <Badge
-                          variant={
-                            video.status === "completed"
-                              ? "default"
-                              : video.status === "processing"
-                              ? "secondary"
-                              : "outline"
-                          }
-                        >
-                          {video.status}
+                      
+                      {/* Status Badge */}
+                      <div className="absolute top-2 right-2">
+                        <Badge variant={
+                          video.status === "completed" ? "default" :
+                          video.status === "processing" ? "outline" :
+                          "secondary"
+                        }>
+                          {video.status === "completed" ? "Completed" :
+                            video.status === "processing" ? "Processing" :
+                            "Pending"}
                         </Badge>
                       </div>
-                      <CardDescription>
-                        {new Date(video.created_at).toLocaleDateString()}
+                    </div>
+                    <CardHeader className="p-4">
+                      <CardTitle className="text-lg truncate">{video.name}</CardTitle>
+                      <CardDescription className="truncate">
+                        Uploaded {new Date(video.created_at).toLocaleDateString()}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="pb-3">
-                      <div className="flex justify-between items-center">
-                        <Button variant="outline" size="sm" asChild>
-                          <Link to={`/videos/${video.id}`}>View Details</Link>
-                        </Button>
-                        
-                        {/* Model dan Processing Time */}
-                        {video.status === "completed" && (
-                          <div className="text-xs text-muted-foreground">
-                            <span className="font-medium">{video.model_size || "nano"}</span>
-                            {video.processing_time && (
-                              <span className="ml-2">{`(${video.processing_time.toFixed(1)}s)`}</span>
-                            )}
-                          </div>
-                        )}
+                    <CardFooter className="p-4 pt-0 flex justify-between">
+                      <div className="text-sm text-muted-foreground">
+                        {video.duration ? `${Math.floor(video.duration / 60)}:${String(Math.floor(video.duration % 60)).padStart(2, '0')}` : '00:00'}
                       </div>
-                    </CardContent>
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to={`/videos/${video.id}`}>
+                          <Eye className="h-4 w-4 mr-1" /> View
+                        </Link>
+                      </Button>
+                    </CardFooter>
                   </Card>
                 ))}
               </div>
             )}
-
-            <div className="flex justify-center">
-              <Button variant="outline" asChild>
-                <Link to="/history">View All Videos</Link>
-              </Button>
-            </div>
           </>
         )}
       </div>

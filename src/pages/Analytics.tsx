@@ -243,9 +243,7 @@ const Analytics = () => {
                 </Select>
               </div>
             </div>
-
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
+            <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium">Total Vehicles</CardTitle>
                 </CardHeader>
@@ -255,6 +253,20 @@ const Analytics = () => {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Across {completedVideos.length} processed videos
+                  </p>
+                </CardContent>
+              </Card>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Motorcycles</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-traffic-motorcycle">
+                    {vehicleCounts.motorcycle || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {totalVehicles ? Math.round((vehicleCounts.motorcycle / totalVehicles) * 100) : 0}% of total vehicles
                   </p>
                 </CardContent>
               </Card>

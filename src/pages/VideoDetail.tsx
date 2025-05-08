@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { videoService } from "@/services/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, Download, ArrowLeft } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -22,6 +23,18 @@ import {
   Cell,
 } from "recharts";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Car, Truck, Bus, Bike } from "lucide-react";
+
+// Helper functions for safe computation
+const safeReduce = (values: any[], initialValue = 0) => {
+  return values.reduce((sum: number, val: any) => sum + Number(val || 0), initialValue);
+};
+
+const objectValuesToNumbers = (obj: Record<string, any> | undefined | null) => {
+  if (!obj) return 0;
+  return safeReduce(Object.values(obj));
+};
 
 const COLORS = {
   car: "#FF6B6B",
@@ -201,293 +214,398 @@ const VideoDetail = () => {
                             setIsVideoPlayable(false);
                           }
                         }}
-                      >
-                        <source src={`${apiUrl}/${video.result_path}?t=${Date.now()}&auth_token=${token || ''}`} type="video/mp4" />
-                      </video>
+                      />
                     ) : (
-                      <div className="text-center p-4">
-                        <p className="text-white mb-4">Video playback is not available. Please try downloading the video instead.</p>
-                        <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700">
-                          <Download className="mr-2 h-4 w-4" /> Download Video
-                        </Button>
+                      <div className="flex items-center justify-center h-full bg-gray-800 text-white p-4 text-center">
+                        <div>
+                          <p className="mb-2">Video playback is not available.</p>
+                          <Button 
+                            variant="outline" 
+                            onClick={handleDownload}
+                          >
+                            <Download className="mr-2 h-4 w-4" />
+                            Download to view
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </div>
-                ) : video.status === "processing" ? (
-                  <div className="flex items-center justify-center h-full bg-gray-900">
-                    <p className="text-white animate-pulse">Processing video...</p>
-                  </div>
-                ) : video.status === "failed" ? (
-                  <div className="flex items-center justify-center h-full bg-gray-900">
-                    <p className="text-white text-red-500">Processing failed</p>
-                  </div>
                 ) : (
-                  <div className="flex items-center justify-center h-full bg-gray-900">
-                    <p className="text-white">Video ready for processing</p>
+                  <div className="flex items-center justify-center h-full bg-gray-800 text-white p-6">
+                    <div className="text-center">
+                      <p className="mb-2">
+                        {video.status === "processing" 
+                          ? "Video is still processing..." 
+                          : "Processing has not started yet."}
+                      </p>
+                      {video.status === "processing" && (
+                        <div className="w-48 mx-auto mt-2">
+                          <Progress value={75} className="h-2" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
-              <div className="p-4 border-t bg-card">
-                <div className="flex flex-col space-y-3">
-                  <div className="flex flex-wrap gap-2">
-                    <Button 
-                      variant="secondary" 
-                      size="sm"
-                      disabled={video.status !== "completed"}
-                      onClick={handleDownload}
-                    >
-                      <Download className="mr-2 h-4 w-4" />
-                      Download Processed Video
-                    </Button>
-                    {video.file_path && (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => window.open(`${apiUrl}/${video.file_path}?auth_token=${token || ''}`, '_blank')}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        View Original
-                      </Button>
-                    )}
-                    
-                    {video.status === "completed" && video.result_path && (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => window.open(`${apiUrl}/${video.result_path}?auth_token=${token || ''}`, '_blank')}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        Open Video Directly
-                      </Button>
-                    )}
-                  </div>
-                  
-                  {video.status === "completed" && results && results.processing_stats && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2 text-sm text-muted-foreground">
-                      <div>
-                        <span className="font-medium">Model:</span> {video.model_size || "nano"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Processing Time:</span> {results.processing_stats.processing_time_seconds ? `${results.processing_stats.processing_time_seconds.toFixed(1)}s` : "N/A"}
-                      </div>
-                      <div>
-                        <span className="font-medium">FPS:</span> {results.processing_stats.frames_per_second ? results.processing_stats.frames_per_second.toFixed(1) : "N/A"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Frames:</span> {results.processing_stats.processed_frames || 0}/{results.processing_stats.total_frames || 0}
-                      </div>
-                    </div>
-                  )}
+              
+              <div className="p-4 border-t border-border flex justify-between items-center">
+                <div className="flex items-center space-x-4">
+                  <Badge variant={
+                    video.status === "completed" ? "default" : 
+                    video.status === "processing" ? "secondary" : 
+                    "outline"
+                  }>
+                    {video.status || "Pending"}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    {video.model_size ? `Model: ${video.model_size}` : ""}
+                  </span>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {results?.processing_stats?.processing_time_seconds ? 
+                    `Processed in ${results.processing_stats.processing_time_seconds.toFixed(1)}s` : ""}
                 </div>
               </div>
             </Card>
-
-            {video.status === "completed" && !isLoadingResults && results ? (
+            
+            {video.status === "completed" && results && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Detection Results</CardTitle>
-                  <CardDescription>
-                    Traffic data extracted from video analysis
-                  </CardDescription>
+                  <CardTitle>Advanced Vehicle Detection</CardTitle>
+                  <CardDescription>Using improved algorithm with object fingerprinting to prevent multiple counting</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Tabs defaultValue="overview">
-                    <TabsList className="mb-4">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="timeline">Timeline</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="overview">
-                      <div className="grid gap-4">
-                        <div className="h-[300px]">
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <h3 className="font-medium mb-2">Detection Parameters</h3>
+                      <div className="space-y-1 text-sm">
+                        {results.debug_info?.detection_parameters && (
+                          <>
+                            <p><span className="font-semibold">Confidence threshold:</span> {results.debug_info.detection_parameters.confidence_threshold}</p>
+                            <p><span className="font-semibold">IoU threshold:</span> {results.debug_info.detection_parameters.iou_threshold}</p>
+                            <p><span className="font-semibold">Tracking method:</span> {results.debug_info.detection_parameters.tracking_method}</p>
+                            <p><span className="font-semibold">Min size:</span> {results.debug_info.detection_parameters.min_size_percentage * 100}% of frame</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-medium mb-2">Processing Statistics</h3>
+                      <div className="space-y-1 text-sm">
+                        {results.processing_stats && (
+                          <>
+                            <p><span className="font-semibold">Frames processed:</span> {results.processing_stats.processed_frames}</p>
+                            <p><span className="font-semibold">Fps:</span> {results.processing_stats.frames_per_second?.toFixed(1) || "N/A"}</p>
+                            <p><span className="font-semibold">Resolution:</span> {results.resolution || "N/A"}</p>
+                            <p><span className="font-semibold">Counting method:</span> {results.processing_stats.counting_method || "Line crossing"}</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {results.debug_info?.stability && (
+                    <div className="mt-4 border-t pt-4">
+                      <h3 className="font-medium mb-2">Detection Stability</h3>
+                      <div className="grid grid-cols-4 gap-2">
+                        <div className="bg-gray-100 p-3 rounded">
+                          <div className="text-sm text-muted-foreground">Avg Detections</div>
+                          <div className="text-xl font-bold">{results.debug_info.stability.avg_detections_per_frame?.toFixed(1)}</div>
+                        </div>
+                        <div className="bg-gray-100 p-3 rounded">
+                          <div className="text-sm text-muted-foreground">Min</div>
+                          <div className="text-xl font-bold">{results.debug_info.stability.min_detections}</div>
+                        </div>
+                        <div className="bg-gray-100 p-3 rounded">
+                          <div className="text-sm text-muted-foreground">Max</div>
+                          <div className="text-xl font-bold">{results.debug_info.stability.max_detections}</div>
+                        </div>
+                        <div className="bg-gray-100 p-3 rounded">
+                          <div className="text-sm text-muted-foreground">Variance</div>
+                          <div className="text-xl font-bold">{results.debug_info.stability.detection_variance?.toFixed(1)}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {video.status === "completed" && results && (
+              <Tabs defaultValue="analysis" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="analysis">Analysis</TabsTrigger>
+                  <TabsTrigger value="data">Raw Data</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="analysis" className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Vehicle Distribution</CardTitle>
+                        <CardDescription>Types of vehicles detected</CardDescription>
+                      </CardHeader>
+                      <CardContent className="h-[300px]">
+                        {pieData.length > 0 ? (
                           <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                               <Pie
                                 data={pieData}
+                                dataKey="value"
+                                nameKey="name"
                                 cx="50%"
                                 cy="50%"
-                                labelLine={false}
                                 outerRadius={80}
-                                fill="#8884d8"
-                                dataKey="value"
-                                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                label={(entry) => `${entry.name}: ${entry.value}`}
                               >
                                 {pieData.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS]} />
+                                  <Cell 
+                                    key={`cell-${index}`} 
+                                    fill={COLORS[entry.name as keyof typeof COLORS] || "#999999"} 
+                                  />
                                 ))}
                               </Pie>
-                              <Tooltip />
                               <Legend />
+                              <Tooltip />
                             </PieChart>
                           </ResponsiveContainer>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                          {Object.entries(results.total_counts || {}).map(([type, count]) => (
-                            <Card key={type}>
-                              <CardHeader className="py-2">
-                                <CardTitle className="text-sm capitalize">{type}</CardTitle>
-                              </CardHeader>
-                              <CardContent>
-                                <div className="text-2xl font-bold">{String(count)}</div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      </div>
-                    </TabsContent>
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <p className="text-muted-foreground">No vehicles detected</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
                     
-                    <TabsContent value="timeline">
-                      <div className="h-[400px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <ComposedChart data={timeSeriesData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="time" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="car" fill="#FF6B6B" name="Cars" />
-                            <Bar dataKey="truck" fill="#4ECDC4" name="Trucks" />
-                            <Bar dataKey="bus" fill="#FFA400" name="Buses" />
-                            <Bar dataKey="motorcycle" fill="#7D83FF" name="Motorcycles" />
-                            <Line
-                              type="monotone"
-                              dataKey="car"
-                              stroke="#FF6B6B"
-                              dot={false}
-                              activeDot={false}
-                              opacity={0.5}
-                            />
-                          </ComposedChart>
-                        </ResponsiveContainer>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Vehicle Detection Timeline</CardTitle>
+                        <CardDescription>Detected vehicles over time</CardDescription>
+                      </CardHeader>
+                      <CardContent className="h-[300px]">
+                        {timeSeriesData.length > 0 ? (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <ComposedChart data={timeSeriesData}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis dataKey="time" />
+                              <YAxis />
+                              <Tooltip />
+                              <Legend />
+                              <Bar dataKey="car" fill={COLORS.car} />
+                              <Bar dataKey="truck" fill={COLORS.truck} />
+                              <Bar dataKey="bus" fill={COLORS.bus} />
+                              <Bar dataKey="motorcycle" fill={COLORS.motorcycle} />
+                              <Line type="monotone" dataKey="car" stroke={COLORS.car} dot={false} />
+                            </ComposedChart>
+                          </ResponsiveContainer>
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <p className="text-muted-foreground">No timeline data available</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Detection Summary</CardTitle>
+                      <CardDescription>Overview of detected objects</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="space-y-1">
+                          <p className="text-sm text-muted-foreground">Total Vehicles</p>
+                          <p className="text-2xl font-bold">
+                            {objectValuesToNumbers(results.total_counts) as number}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm text-muted-foreground">Unique Vehicles</p>
+                          <p className="text-2xl font-bold">
+                            {objectValuesToNumbers(results.unique_vehicles) as number}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm text-muted-foreground">Counted Vehicles</p>
+                          <p className="text-2xl font-bold">
+                            {objectValuesToNumbers(results.counted_vehicles) as number}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm text-muted-foreground">Vehicle Density</p>
+                          <p className="text-2xl font-bold">
+                            {results.processing_stats?.vehicle_density?.toFixed(2) || "N/A"}
+                          </p>
+                        </div>
                       </div>
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
-            ) : video.status === "processing" ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Processing Video</CardTitle>
-                  <CardDescription>
-                    Your video is currently being processed with AI
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center p-8">
-                    <div className="flex flex-col items-center space-y-4">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                      <p>Analyzing video for vehicle detection...</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : video.status === "failed" ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Processing Failed</CardTitle>
-                  <CardDescription>
-                    There was an issue processing this video
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center p-8">
-                    <div className="flex flex-col items-center space-y-4">
-                      <p className="text-destructive font-medium">The video analysis could not be completed</p>
-                      <Button>Try Processing Again</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : null}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                
+                <TabsContent value="data">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Raw Detection Data</CardTitle>
+                      <CardDescription>JSON results from the detection model</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="relative h-[400px] overflow-auto rounded bg-muted">
+                        <pre className="p-4 text-xs">
+                          {JSON.stringify(results, null, 2)}
+                        </pre>
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleDownloadResults}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        Download JSON Data
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            )}
           </div>
-
+          
           <div className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>Video Information</CardTitle>
               </CardHeader>
               <CardContent>
-                <dl className="space-y-4 text-sm">
-                  <div className="flex justify-between">
-                    <dt className="font-medium">Status:</dt>
-                    <dd>{video.status}</dd>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium">Status</div>
+                    <div>
+                      <Badge variant={
+                        video.status === "completed" ? "default" :
+                        video.status === "processing" ? "secondary" :
+                        "outline"
+                      }>
+                        {video.status === "completed" ? "Completed" :
+                         video.status === "processing" ? "Processing" :
+                         "Pending"}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <dt className="font-medium">Upload date:</dt>
-                    <dd>{new Date(video.created_at).toLocaleDateString()}</dd>
+                  
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium">Filename</div>
+                    <div className="text-sm break-all">{video.filename}</div>
                   </div>
-                  {video.updated_at && (
-                    <div className="flex justify-between">
-                      <dt className="font-medium">Last updated:</dt>
-                      <dd>{new Date(video.updated_at).toLocaleDateString()}</dd>
+                  
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium">Upload Date</div>
+                    <div className="text-sm">
+                      {new Date(video.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  {video.duration !== undefined && (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">Duration</div>
+                      <div className="text-sm">
+                        {Math.floor(video.duration / 60)}:{String(Math.floor(video.duration % 60)).padStart(2, '0')}
+                      </div>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <dt className="font-medium">Original filename:</dt>
-                    <dd>{video.original_filename}</dd>
-                  </div>
-                  {video.description && (
-                    <div className="pt-2">
-                      <dt className="font-medium mb-1">Description:</dt>
-                      <dd className="text-muted-foreground">{video.description}</dd>
+                  
+                  {video.size !== undefined && (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">File Size</div>
+                      <div className="text-sm">
+                        {(video.size / (1024 * 1024)).toFixed(2)} MB
+                      </div>
                     </div>
                   )}
-                </dl>
+                  
+                  {video.model_size && (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">AI Model</div>
+                      <div className="text-sm">
+                        {video.model_size}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={handleDownload}
+                  disabled={video.status !== "completed"}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download Video
+                </Button>
+              </CardFooter>
             </Card>
-
-            {video.status === "completed" && results && (
+            
+            {video.status === "completed" && results && results.total_counts && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Processing Stats</CardTitle>
+                  <CardTitle>Vehicle Types</CardTitle>
+                  <CardDescription>Types of vehicles detected</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <dl className="space-y-4 text-sm">
-                    {results.processing_stats && (
-                      <>
-                        <div className="flex justify-between">
-                          <dt className="font-medium">Processed frames:</dt>
-                          <dd>{results.processing_stats.processed_frames}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="font-medium">Vehicle density:</dt>
-                          <dd>{results.processing_stats.vehicle_density.toFixed(2)} vehicles/frame</dd>
-                        </div>
-                        {results.processing_stats.processing_time_seconds && (
-                          <div className="flex justify-between">
-                            <dt className="font-medium">Processing time:</dt>
-                            <dd>{results.processing_stats.processing_time_seconds.toFixed(2)}s</dd>
+                  <div className="space-y-4">
+                    {Object.entries(results.total_counts || {}).map(([type, count]) => 
+                      Number(count) > 0 && (
+                        <div key={type} className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            {type === 'car' && <Car className="h-5 w-5 mr-2 text-red-500" />}
+                            {type === 'truck' && <Truck className="h-5 w-5 mr-2 text-purple-500" />}
+                            {type === 'bus' && <Bus className="h-5 w-5 mr-2 text-blue-500" />}
+                            {type === 'motorcycle' && <Bike className="h-5 w-5 mr-2 text-yellow-500" />}
+                            <span className="capitalize">{type}s</span>
                           </div>
-                        )}
-                      </>
+                          <div className="font-bold">{Number(count)}</div>
+                        </div>
+                      )
                     )}
-                    <div className="flex justify-between">
-                      <dt className="font-medium">Total frames:</dt>
-                      <dd>{results.total_frames}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="font-medium">FPS:</dt>
-                      <dd>{results.fps}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="font-medium">Resolution:</dt>
-                      <dd>{results.resolution}</dd>
-                    </div>
-                    {results.model_used && (
-                      <div className="flex justify-between">
-                        <dt className="font-medium">AI Model used:</dt>
-                        <dd className="capitalize">{results.model_used}</dd>
+                    
+                    <div className="flex items-center justify-between border-t pt-2 mt-2">
+                      <div className="font-medium">Total</div>
+                      <div className="font-bold">
+                        {objectValuesToNumbers(results.total_counts) as number}
                       </div>
-                    )}
-                  </dl>
+                    </div>
+                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={handleDownloadResults}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Results JSON
-                  </Button>
-                </CardFooter>
+              </Card>
+            )}
+            
+            {video.status === "completed" && results && results.counting_line && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Tracking Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-semibold">Counting Line:</span> {results.counting_line.description}</p>
+                    <p><span className="font-semibold">Position:</span> {results.counting_line.y_position_percentage * 100}% from top</p>
+                    
+                    {results.debug_info?.detection_parameters?.unique_counting && (
+                      <p className="mt-2"><span className="font-semibold">Unique Counting:</span> {results.debug_info.detection_parameters.unique_counting}</p>
+                    )}
+                    
+                    <div className="mt-4 pt-4 border-t">
+                      <div className="font-semibold mb-2">AI Improvements</div>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Object fingerprinting to prevent duplicate counting</li>
+                        <li>Improved detection thresholds (confidence: {results.debug_info?.detection_parameters?.confidence_threshold || 0.4})</li>
+                        <li>Size filtering to eliminate false detections</li>
+                        <li>Adaptive tracking for different vehicle sizes</li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
             )}
           </div>

@@ -14,12 +14,14 @@ const Index = () => {
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-white">Traffic Vision AI Hub</h1>
             </div>
+            {/*
             <div className="hidden md:flex items-center space-x-8">
               <Link to="/" className="text-white hover:text-primary transition-colors">Home</Link>
               <Link to="#features" className="text-white hover:text-primary transition-colors">Features</Link>
               <Link to="#how-it-works" className="text-white hover:text-primary transition-colors">How it Works</Link>
               <Link to="#about" className="text-white hover:text-primary transition-colors">About</Link>
             </div>
+            */}
             <div className="flex items-center space-x-4">
               <Button variant="ghost" className="text-white hover:text-primary" asChild>
                 <Link to="/login">Login</Link>
