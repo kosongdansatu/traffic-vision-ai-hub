@@ -12,10 +12,16 @@ import urllib.request
 import shutil
 import uuid
 from collections import defaultdict
+import subprocess
 
 # Setup logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG,  # Change to DEBUG for more verbose logging
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(),  # Log to console
+        logging.FileHandler("ai_processing.log"),  # Also log to file
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -694,6 +700,67 @@ def process_frame(
     return annotated_frame, results
 
 
+def preprocess_video(input_path: str, output_path: str) -> str:
+    """
+    Preprocess video to ensure compatibility with OpenCV
+
+    Args:
+        input_path (str): Path to the input video
+        output_path (str): Path to save the preprocessed video
+
+    Returns:
+        str: Path to the preprocessed video
+    """
+    logger = logging.getLogger(__name__)
+    logger.info(f"Preprocessing video: {input_path} -> {output_path}")
+
+    # Check if ffmpeg is available
+    try:
+        subprocess.run(["which", "ffmpeg"], check=True, capture_output=True)
+    except subprocess.CalledProcessError:
+        logger.warning("ffmpeg not found, skipping preprocessing")
+        return input_path
+
+    try:
+        # Transcode the video using ffmpeg to a more compatible format
+        cmd = [
+            "ffmpeg",
+            "-y",
+            "-i",
+            input_path,
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "23",
+            "-pix_fmt",
+            "yuv420p",  # Ensure pixel format compatibility
+            output_path,
+        ]
+        logger.info(f"Running ffmpeg command: {' '.join(cmd)}")
+
+        # Execute the command and capture output
+        result = subprocess.run(cmd, capture_output=True, text=True)
+
+        if result.returncode != 0:
+            logger.error(f"ffmpeg error: {result.stderr}")
+            return input_path
+
+        # Verify the output file exists and has content
+        if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+            logger.info(f"Successfully preprocessed video to {output_path}")
+            return output_path
+        else:
+            logger.error(f"Output file {output_path} is missing or empty")
+            return input_path
+
+    except Exception as e:
+        logger.error(f"Error preprocessing video: {str(e)}")
+        traceback.print_exc()
+        return input_path
+
+
 def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str, str]:
     """
     Process a video, detect and track vehicles
@@ -717,15 +784,29 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
     logger.info(f"Starting video processing with {model_size} model")
     start_time = time.time()
 
-    # Path for saving thumbnail
+    # Path for saving thumbnail and preprocessed video
     thumbnail_path = f"results/{file_id}_thumbnail.jpg"
     json_path = f"results/{file_id}_results.json"
+    preprocessed_path = f"uploads/{file_id}_preprocessed.mp4"
+
+    # Preprocess the video for better compatibility
+    try:
+        actual_video_path = preprocess_video(video_path, preprocessed_path)
+    except Exception as e:
+        logger.error(f"Error during video preprocessing: {str(e)}")
+        actual_video_path = video_path  # Fallback to original
 
     try:
         # Initialize video capture
-        cap = cv2.VideoCapture(video_path)
+        cap = cv2.VideoCapture(actual_video_path)
         if not cap.isOpened():
-            raise Exception(f"Failed to open video file: {video_path}")
+            logger.error(
+                f"Failed to open video at {actual_video_path}, trying original path"
+            )
+            # Try the original path as fallback
+            cap = cv2.VideoCapture(video_path)
+            if not cap.isOpened():
+                raise Exception(f"Failed to open video file: {video_path}")
 
         # Get video properties
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -739,8 +820,35 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
 
         # Initialize video writer for output
         result_path = f"results/{file_id}_processed.mp4"
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        out = cv2.VideoWriter(result_path, fourcc, fps, (width, height))
+        # Gunakan codec yang lebih kompatibel dengan macOS (H.264)
+        try:
+            # Coba gunakan codec H.264 yang biasanya tersedia di macOS
+            fourcc = cv2.VideoWriter_fourcc(*"avc1")
+            out = cv2.VideoWriter(result_path, fourcc, fps, (width, height))
+
+            # Verifikasi apakah video writer berhasil dibuat
+            if not out.isOpened():
+                # Jika gagal, coba dengan codec XVID untuk format AVI
+                logger.warning(
+                    "Failed to create video writer with avc1 codec, trying XVID"
+                )
+                result_path = f"results/{file_id}_processed.avi"
+                fourcc = cv2.VideoWriter_fourcc(*"XVID")
+                out = cv2.VideoWriter(result_path, fourcc, fps, (width, height))
+
+                # Jika masih gagal, gunakan codec default
+                if not out.isOpened():
+                    logger.warning(
+                        "Failed to create video writer with XVID codec, trying default codec"
+                    )
+                    result_path = f"results/{file_id}_processed.mp4"
+                    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+                    out = cv2.VideoWriter(result_path, fourcc, fps, (width, height))
+        except Exception as e:
+            logger.error(f"Error creating video writer: {str(e)}")
+            # Fallback ke codec default
+            fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+            out = cv2.VideoWriter(result_path, fourcc, fps, (width, height))
 
         # Initialize results dictionary
         results = {
@@ -809,6 +917,15 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
 
             frame_count += 1
 
+            # Ensure frame is in a compatible format for macOS
+            # Convert BGR to RGB and back to ensure proper format
+            try:
+                frame = cv2.cvtColor(
+                    cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), cv2.COLOR_RGB2BGR
+                )
+            except Exception as e:
+                logger.warning(f"Frame conversion failed: {str(e)}")
+
             # Reduce processing load by skipping frames according to sampling rate
             if frame_count % sampling_rate != 0 and frame_count > 1:
                 continue
@@ -858,6 +975,22 @@ def process_video(video_path: str, file_id: str, model_size="nano") -> Tuple[str
 
                 # Write processed frame to output video
                 out.write(processed_frame)
+
+                # Verifikasi apakah penulisan frame berjalan dengan baik
+                # Secara tidak langsung dengan memeriksa status video writer
+                if not out.isOpened():
+                    logger.error(
+                        f"Video writer closed unexpectedly when processing frame {frame_count}"
+                    )
+                    # Coba buat ulang video writer
+                    try:
+                        out.release()
+                        out = cv2.VideoWriter(result_path, fourcc, fps, (width, height))
+                        logger.info("Recreated video writer")
+                    except Exception as recreate_error:
+                        logger.error(
+                            f"Failed to recreate video writer: {str(recreate_error)}"
+                        )
 
                 # Update results with latest data
                 results = updated_results
