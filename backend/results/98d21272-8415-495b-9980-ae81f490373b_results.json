@@ -1,0 +1,5868 @@
+{
+  "video_id": "98d21272-8415-495b-9980-ae81f490373b",
+  "total_frames": 546,
+  "fps": 29.97002997002997,
+  "resolution": "3840x2160",
+  "model_used": "nano",
+  "thumbnail_path": "results/98d21272-8415-495b-9980-ae81f490373b_thumbnail.jpg",
+  "total_counts": {
+    "car": 2,
+    "motorcycle": 2,
+    "bus": 0,
+    "truck": 1
+  },
+  "frames": [
+    {
+      "frame_number": 0,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 1,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 2,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2427,
+            1192,
+            2710,
+            1352
+          ],
+          "confidence": 0.5748798847198486,
+          "centroid": [
+            2568,
+            1272
+          ],
+          "counted": false,
+          "fingerprint": "car_1.8_45.3_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 3,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2408,
+            1195,
+            2704,
+            1360
+          ],
+          "confidence": 0.5552869439125061,
+          "centroid": [
+            2556,
+            1277
+          ],
+          "counted": false,
+          "fingerprint": "car_1.8_48.8_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 4,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2393,
+            1195,
+            2682,
+            1362
+          ],
+          "confidence": 0.7145753502845764,
+          "centroid": [
+            2537,
+            1278
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_48.3_0.6"
+        },
+        {
+          "id": "2",
+          "type": "motorcycle",
+          "bbox": [
+            1299,
+            1879,
+            1550,
+            2086
+          ],
+          "confidence": 0.4465932846069336,
+          "centroid": [
+            1424,
+            1982
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.2_52.0_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 5,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2374,
+            1195,
+            2656,
+            1363
+          ],
+          "confidence": 0.4389837980270386,
+          "centroid": [
+            2515,
+            1279
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_47.4_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 6,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2360,
+            1202,
+            2642,
+            1365
+          ],
+          "confidence": 0.6904844641685486,
+          "centroid": [
+            2501,
+            1283
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_46.0_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 7,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2349,
+            1201,
+            2624,
+            1365
+          ],
+          "confidence": 0.5628843903541565,
+          "centroid": [
+            2486,
+            1283
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_45.1_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 8,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2328,
+            1206,
+            2604,
+            1366
+          ],
+          "confidence": 0.6115745306015015,
+          "centroid": [
+            2466,
+            1286
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_44.2_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 9,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "3",
+          "type": "truck",
+          "bbox": [
+            2307,
+            1209,
+            2597,
+            1368
+          ],
+          "confidence": 0.4066896140575409,
+          "centroid": [
+            2452,
+            1288
+          ],
+          "counted": false,
+          "fingerprint": "truck_1.8_46.1_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 10,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "3",
+          "type": "truck",
+          "bbox": [
+            2297,
+            1214,
+            2586,
+            1371
+          ],
+          "confidence": 0.48755693435668945,
+          "centroid": [
+            2441,
+            1292
+          ],
+          "counted": false,
+          "fingerprint": "truck_1.8_45.4_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 11,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 12,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 13,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 14,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 15,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 16,
+      "counts": {
+        "car": 1,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2197,
+            1222,
+            2481,
+            1376
+          ],
+          "confidence": 0.46742916107177734,
+          "centroid": [
+            2339,
+            1299
+          ],
+          "counted": true,
+          "fingerprint": "car_1.8_43.7_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 17,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 18,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 19,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 20,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 21,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 22,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 23,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 24,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 25,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 26,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 27,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2015,
+            1224,
+            2302,
+            1381
+          ],
+          "confidence": 0.47169411182403564,
+          "centroid": [
+            2158,
+            1302
+          ],
+          "counted": true,
+          "fingerprint": "car_1.8_45.1_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 28,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            2002,
+            1213,
+            2280,
+            1377
+          ],
+          "confidence": 0.46208611130714417,
+          "centroid": [
+            2141,
+            1295
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_45.6_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 29,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "2",
+          "type": "motorcycle",
+          "bbox": [
+            1338,
+            1860,
+            1601,
+            2076
+          ],
+          "confidence": 0.440692663192749,
+          "centroid": [
+            1469,
+            1968
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.2_56.8_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 30,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 31,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 1
+      },
+      "tracked_objects": [
+        {
+          "id": "3",
+          "type": "truck",
+          "bbox": [
+            1945,
+            1227,
+            2330,
+            1380
+          ],
+          "confidence": 0.4071338474750519,
+          "centroid": [
+            2137,
+            1303
+          ],
+          "counted": true,
+          "fingerprint": "truck_2.5_58.9_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 32,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 33,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "3",
+          "type": "truck",
+          "bbox": [
+            1916,
+            1229,
+            2304,
+            1383
+          ],
+          "confidence": 0.43694591522216797,
+          "centroid": [
+            2110,
+            1306
+          ],
+          "counted": true,
+          "fingerprint": "truck_2.5_59.8_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 34,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "3",
+          "type": "truck",
+          "bbox": [
+            1899,
+            1224,
+            2291,
+            1383
+          ],
+          "confidence": 0.4366866946220398,
+          "centroid": [
+            2095,
+            1303
+          ],
+          "counted": true,
+          "fingerprint": "truck_2.5_62.3_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 35,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "3",
+          "type": "truck",
+          "bbox": [
+            1884,
+            1216,
+            2280,
+            1383
+          ],
+          "confidence": 0.4270974397659302,
+          "centroid": [
+            2082,
+            1299
+          ],
+          "counted": true,
+          "fingerprint": "truck_2.4_66.1_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 36,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 37,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 38,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 39,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 40,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1388,
+            1860,
+            1650,
+            2063
+          ],
+          "confidence": 0.45458126068115234,
+          "centroid": [
+            1519,
+            1961
+          ],
+          "counted": true,
+          "fingerprint": "car_1.3_53.2_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 41,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 42,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 43,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 44,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 45,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 46,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 47,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 48,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1692,
+            1202,
+            1962,
+            1340
+          ],
+          "confidence": 0.4115019142627716,
+          "centroid": [
+            1827,
+            1271
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_37.3_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 49,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 50,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 51,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 52,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1642,
+            1172,
+            2027,
+            1342
+          ],
+          "confidence": 0.4774481952190399,
+          "centroid": [
+            1834,
+            1257
+          ],
+          "counted": true,
+          "fingerprint": "car_2.3_65.5_0.6"
+        }
+      ]
+    },
+    {
+      "frame_number": 53,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 54,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 55,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 56,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 57,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 58,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 59,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 60,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 61,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 62,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 63,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 64,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 65,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 66,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 67,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 68,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "4",
+          "type": "truck",
+          "bbox": [
+            1425,
+            1105,
+            1807,
+            1267
+          ],
+          "confidence": 0.47658678889274597,
+          "centroid": [
+            1616,
+            1186
+          ],
+          "counted": false,
+          "fingerprint": "truck_2.4_61.9_0.5"
+        }
+      ]
+    },
+    {
+      "frame_number": 69,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 70,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 71,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 72,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 73,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 74,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 75,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 76,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 77,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 78,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 79,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 80,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 81,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 82,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 83,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1275,
+            1022,
+            1494,
+            1153
+          ],
+          "confidence": 0.4410236179828644,
+          "centroid": [
+            1384,
+            1087
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_28.7_0.5"
+        }
+      ]
+    },
+    {
+      "frame_number": 84,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 85,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 86,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 87,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 88,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 89,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 90,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 91,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 92,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 93,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 94,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 95,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 96,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 97,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 98,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 99,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 100,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1165,
+            913,
+            1370,
+            1041
+          ],
+          "confidence": 0.41142165660858154,
+          "centroid": [
+            1267,
+            977
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_26.2_0.5"
+        }
+      ]
+    },
+    {
+      "frame_number": 101,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 102,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1156,
+            897,
+            1352,
+            1022
+          ],
+          "confidence": 0.6122822761535645,
+          "centroid": [
+            1254,
+            959
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_24.5_0.4"
+        }
+      ]
+    },
+    {
+      "frame_number": 103,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 104,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 105,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1150,
+            884,
+            1350,
+            1010
+          ],
+          "confidence": 0.42670825123786926,
+          "centroid": [
+            1250,
+            947
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_25.2_0.4"
+        }
+      ]
+    },
+    {
+      "frame_number": 106,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1141,
+            879,
+            1338,
+            1007
+          ],
+          "confidence": 0.519115686416626,
+          "centroid": [
+            1239,
+            943
+          ],
+          "counted": true,
+          "fingerprint": "car_1.5_25.2_0.4"
+        }
+      ]
+    },
+    {
+      "frame_number": 107,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 108,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 109,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1131,
+            856,
+            1326,
+            981
+          ],
+          "confidence": 0.4878292381763458,
+          "centroid": [
+            1228,
+            918
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_24.4_0.4"
+        }
+      ]
+    },
+    {
+      "frame_number": 110,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1128,
+            848,
+            1309,
+            978
+          ],
+          "confidence": 0.6527213454246521,
+          "centroid": [
+            1218,
+            913
+          ],
+          "counted": true,
+          "fingerprint": "car_1.4_23.5_0.4"
+        }
+      ]
+    },
+    {
+      "frame_number": 111,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1125,
+            853,
+            1283,
+            967
+          ],
+          "confidence": 0.46074968576431274,
+          "centroid": [
+            1204,
+            910
+          ],
+          "counted": true,
+          "fingerprint": "car_1.4_18.0_0.4"
+        }
+      ]
+    },
+    {
+      "frame_number": 112,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 113,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 114,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 115,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 116,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 117,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 118,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "1",
+          "type": "car",
+          "bbox": [
+            1109,
+            811,
+            1286,
+            932
+          ],
+          "confidence": 0.4484211802482605,
+          "centroid": [
+            1197,
+            871
+          ],
+          "counted": true,
+          "fingerprint": "car_1.5_21.4_0.4"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1527,
+            1967,
+            1842,
+            2156
+          ],
+          "confidence": 0.4230886697769165,
+          "centroid": [
+            1684,
+            2061
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_59.5_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 119,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1529,
+            1957,
+            1853,
+            2155
+          ],
+          "confidence": 0.4456401467323303,
+          "centroid": [
+            1691,
+            2056
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_64.2_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 120,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 121,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1540,
+            1958,
+            1863,
+            2156
+          ],
+          "confidence": 0.43535348773002625,
+          "centroid": [
+            1701,
+            2057
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_64.0_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 122,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 123,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 124,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 125,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 126,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 127,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 128,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 129,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 130,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 131,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 132,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 133,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 134,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 135,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 136,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 137,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 138,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 139,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1631,
+            1957,
+            1948,
+            2153
+          ],
+          "confidence": 0.4253762364387512,
+          "centroid": [
+            1789,
+            2055
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_62.1_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 140,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 141,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 142,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 143,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 144,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 145,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 146,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1663,
+            1953,
+            1979,
+            2150
+          ],
+          "confidence": 0.47307875752449036,
+          "centroid": [
+            1821,
+            2051
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_62.3_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 147,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 148,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 149,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1677,
+            1955,
+            1994,
+            2145
+          ],
+          "confidence": 0.4038296639919281,
+          "centroid": [
+            1835,
+            2050
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_60.2_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 150,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1681,
+            1959,
+            1998,
+            2147
+          ],
+          "confidence": 0.44154518842697144,
+          "centroid": [
+            1839,
+            2053
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_59.6_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 151,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 152,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1689,
+            1955,
+            2016,
+            2148
+          ],
+          "confidence": 0.41924795508384705,
+          "centroid": [
+            1852,
+            2051
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_63.1_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 153,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 154,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1701,
+            1948,
+            2021,
+            2140
+          ],
+          "confidence": 0.4032662510871887,
+          "centroid": [
+            1861,
+            2044
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_61.4_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 155,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 156,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1711,
+            1948,
+            2029,
+            2142
+          ],
+          "confidence": 0.5080288052558899,
+          "centroid": [
+            1870,
+            2045
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_61.7_0.9"
+        },
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1053,
+            625,
+            1208,
+            741
+          ],
+          "confidence": 0.4330015778541565,
+          "centroid": [
+            1130,
+            683
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_18.0_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 157,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 158,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 159,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1731,
+            1951,
+            2047,
+            2144
+          ],
+          "confidence": 0.5169695615768433,
+          "centroid": [
+            1889,
+            2047
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_61.0_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 160,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1737,
+            1950,
+            2055,
+            2143
+          ],
+          "confidence": 0.5227441787719727,
+          "centroid": [
+            1896,
+            2046
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_61.4_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 161,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 162,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 163,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 164,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1763,
+            1943,
+            2076,
+            2141
+          ],
+          "confidence": 0.47787249088287354,
+          "centroid": [
+            1919,
+            2042
+          ],
+          "counted": true,
+          "fingerprint": "car_1.6_62.0_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 165,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 166,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1773,
+            1952,
+            2087,
+            2139
+          ],
+          "confidence": 0.4263819754123688,
+          "centroid": [
+            1930,
+            2045
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_58.7_0.9"
+        },
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1068,
+            589,
+            1215,
+            691
+          ],
+          "confidence": 0.4146535098552704,
+          "centroid": [
+            1141,
+            640
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_15.0_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 167,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1073,
+            580,
+            1262,
+            684
+          ],
+          "confidence": 0.40396228432655334,
+          "centroid": [
+            1167,
+            632
+          ],
+          "counted": false,
+          "fingerprint": "car_1.8_19.7_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 168,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1074,
+            583,
+            1209,
+            669
+          ],
+          "confidence": 0.5256587862968445,
+          "centroid": [
+            1141,
+            626
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_11.6_0.3"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1782,
+            1954,
+            2103,
+            2138
+          ],
+          "confidence": 0.48474180698394775,
+          "centroid": [
+            1942,
+            2046
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_59.1_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 169,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1076,
+            582,
+            1214,
+            671
+          ],
+          "confidence": 0.4669914245605469,
+          "centroid": [
+            1145,
+            626
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_12.3_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 170,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1080,
+            579,
+            1220,
+            666
+          ],
+          "confidence": 0.4448387026786804,
+          "centroid": [
+            1150,
+            622
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_12.2_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 171,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1081,
+            574,
+            1230,
+            666
+          ],
+          "confidence": 0.5954780578613281,
+          "centroid": [
+            1155,
+            620
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_13.7_0.3"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1804,
+            1953,
+            2120,
+            2139
+          ],
+          "confidence": 0.43887859582901,
+          "centroid": [
+            1962,
+            2046
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_58.8_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 172,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1084,
+            569,
+            1250,
+            665
+          ],
+          "confidence": 0.539389431476593,
+          "centroid": [
+            1167,
+            617
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_15.9_0.3"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1808,
+            1955,
+            2124,
+            2141
+          ],
+          "confidence": 0.4054229259490967,
+          "centroid": [
+            1966,
+            2048
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_58.8_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 173,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1815,
+            1954,
+            2130,
+            2141
+          ],
+          "confidence": 0.4928964078426361,
+          "centroid": [
+            1972,
+            2047
+          ],
+          "counted": true,
+          "fingerprint": "car_1.7_58.9_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 174,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 175,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 176,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 177,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1105,
+            552,
+            1231,
+            644
+          ],
+          "confidence": 0.41217708587646484,
+          "centroid": [
+            1168,
+            598
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_11.6_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 178,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1106,
+            545,
+            1233,
+            641
+          ],
+          "confidence": 0.47988003492355347,
+          "centroid": [
+            1169,
+            593
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_12.2_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 179,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "6",
+          "type": "car",
+          "bbox": [
+            1106,
+            544,
+            1237,
+            638
+          ],
+          "confidence": 0.4881424009799957,
+          "centroid": [
+            1171,
+            591
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_12.3_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 180,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            506,
+            74,
+            586
+          ],
+          "confidence": 0.4641224145889282,
+          "centroid": [
+            37,
+            546
+          ],
+          "counted": false,
+          "fingerprint": "car_0.9_5.9_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 181,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            503,
+            84,
+            578
+          ],
+          "confidence": 0.40805670619010925,
+          "centroid": [
+            42,
+            540
+          ],
+          "counted": false,
+          "fingerprint": "car_1.1_6.3_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 182,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            3,
+            506,
+            106,
+            587
+          ],
+          "confidence": 0.5707242488861084,
+          "centroid": [
+            54,
+            546
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_8.3_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 183,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            8,
+            501,
+            108,
+            579
+          ],
+          "confidence": 0.45112353563308716,
+          "centroid": [
+            58,
+            540
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_7.8_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 184,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            22,
+            506,
+            124,
+            581
+          ],
+          "confidence": 0.44003885984420776,
+          "centroid": [
+            73,
+            543
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_7.7_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 185,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            31,
+            502,
+            136,
+            571
+          ],
+          "confidence": 0.47778451442718506,
+          "centroid": [
+            83,
+            536
+          ],
+          "counted": false,
+          "fingerprint": "car_1.5_7.2_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 186,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            41,
+            496,
+            149,
+            579
+          ],
+          "confidence": 0.5486018657684326,
+          "centroid": [
+            95,
+            537
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_9.0_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 187,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 188,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            76,
+            488,
+            169,
+            561
+          ],
+          "confidence": 0.5539911389350891,
+          "centroid": [
+            122,
+            524
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_6.8_0.2"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1918,
+            1956,
+            2240,
+            2135
+          ],
+          "confidence": 0.48740196228027344,
+          "centroid": [
+            2079,
+            2045
+          ],
+          "counted": true,
+          "fingerprint": "car_1.8_57.6_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 189,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            1922,
+            1962,
+            2246,
+            2136
+          ],
+          "confidence": 0.6497291922569275,
+          "centroid": [
+            2084,
+            2049
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_56.4_0.9"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            86,
+            487,
+            186,
+            567
+          ],
+          "confidence": 0.5487480163574219,
+          "centroid": [
+            136,
+            527
+          ],
+          "counted": false,
+          "fingerprint": "car_1.2_8.0_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 190,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            509,
+            74,
+            608
+          ],
+          "confidence": 0.5038066506385803,
+          "centroid": [
+            37,
+            558
+          ],
+          "counted": false,
+          "fingerprint": "car_0.7_7.3_0.3"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            90,
+            487,
+            199,
+            561
+          ],
+          "confidence": 0.4839957058429718,
+          "centroid": [
+            144,
+            524
+          ],
+          "counted": false,
+          "fingerprint": "car_1.5_8.1_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 191,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            115,
+            483,
+            204,
+            548
+          ],
+          "confidence": 0.510158896446228,
+          "centroid": [
+            159,
+            515
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_5.8_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            505,
+            72,
+            586
+          ],
+          "confidence": 0.4739573001861572,
+          "centroid": [
+            36,
+            545
+          ],
+          "counted": false,
+          "fingerprint": "car_0.9_5.8_0.3"
+        },
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2305,
+            1859,
+            2550,
+            2081
+          ],
+          "confidence": 0.4528578817844391,
+          "centroid": [
+            2427,
+            1970
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.1_54.4_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 192,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            506,
+            78,
+            588
+          ],
+          "confidence": 0.5180586576461792,
+          "centroid": [
+            39,
+            547
+          ],
+          "counted": false,
+          "fingerprint": "car_1.0_6.4_0.3"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            116,
+            487,
+            218,
+            560
+          ],
+          "confidence": 0.4811636507511139,
+          "centroid": [
+            167,
+            523
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_7.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 193,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            136,
+            482,
+            232,
+            551
+          ],
+          "confidence": 0.48003703355789185,
+          "centroid": [
+            184,
+            516
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.6_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            503,
+            117,
+            600
+          ],
+          "confidence": 0.40896090865135193,
+          "centroid": [
+            58,
+            551
+          ],
+          "counted": false,
+          "fingerprint": "car_1.2_11.3_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 194,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            143,
+            482,
+            239,
+            555
+          ],
+          "confidence": 0.643298327922821,
+          "centroid": [
+            191,
+            518
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_7.0_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            508,
+            119,
+            596
+          ],
+          "confidence": 0.5102161765098572,
+          "centroid": [
+            59,
+            552
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_10.5_0.3"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            281,
+            456,
+            408,
+            536
+          ],
+          "confidence": 0.4008743166923523,
+          "centroid": [
+            344,
+            496
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_10.2_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 195,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            156,
+            478,
+            251,
+            548
+          ],
+          "confidence": 0.5098711252212524,
+          "centroid": [
+            203,
+            513
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.7_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            510,
+            127,
+            604
+          ],
+          "confidence": 0.42830395698547363,
+          "centroid": [
+            63,
+            557
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_11.9_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 196,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            167,
+            478,
+            263,
+            547
+          ],
+          "confidence": 0.5291538834571838,
+          "centroid": [
+            215,
+            512
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.6_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 197,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            179,
+            477,
+            278,
+            549
+          ],
+          "confidence": 0.60494065284729,
+          "centroid": [
+            228,
+            513
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_7.1_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            505,
+            149,
+            590
+          ],
+          "confidence": 0.5191125273704529,
+          "centroid": [
+            74,
+            547
+          ],
+          "counted": false,
+          "fingerprint": "car_1.8_12.7_0.3"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            322,
+            454,
+            439,
+            520
+          ],
+          "confidence": 0.47833287715911865,
+          "centroid": [
+            380,
+            487
+          ],
+          "counted": false,
+          "fingerprint": "car_1.8_7.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 198,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            193,
+            476,
+            286,
+            546
+          ],
+          "confidence": 0.5257403254508972,
+          "centroid": [
+            239,
+            511
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_6.5_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            505,
+            161,
+            582
+          ],
+          "confidence": 0.4436967968940735,
+          "centroid": [
+            80,
+            543
+          ],
+          "counted": false,
+          "fingerprint": "car_2.1_12.4_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 199,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            195,
+            474,
+            299,
+            544
+          ],
+          "confidence": 0.5190800428390503,
+          "centroid": [
+            247,
+            509
+          ],
+          "counted": false,
+          "fingerprint": "car_1.5_7.3_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            504,
+            172,
+            579
+          ],
+          "confidence": 0.5047522783279419,
+          "centroid": [
+            86,
+            541
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_12.9_0.3"
+        }
+      ]
+    },
+    {
+      "frame_number": 200,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            2,
+            496,
+            187,
+            577
+          ],
+          "confidence": 0.5116177201271057,
+          "centroid": [
+            94,
+            536
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_15.0_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            212,
+            471,
+            302,
+            543
+          ],
+          "confidence": 0.4132612347602844,
+          "centroid": [
+            257,
+            507
+          ],
+          "counted": false,
+          "fingerprint": "car_1.2_6.5_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 201,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 202,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            40,
+            494,
+            213,
+            565
+          ],
+          "confidence": 0.4234638810157776,
+          "centroid": [
+            126,
+            529
+          ],
+          "counted": false,
+          "fingerprint": "car_2.4_12.3_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            224,
+            469,
+            333,
+            536
+          ],
+          "confidence": 0.4186476171016693,
+          "centroid": [
+            278,
+            502
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_7.3_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 203,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            34,
+            484,
+            216,
+            565
+          ],
+          "confidence": 0.45475998520851135,
+          "centroid": [
+            125,
+            524
+          ],
+          "counted": false,
+          "fingerprint": "car_2.2_14.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 204,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            380,
+            442,
+            514,
+            524
+          ],
+          "confidence": 0.5057151317596436,
+          "centroid": [
+            447,
+            483
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_11.0_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            66,
+            488,
+            228,
+            560
+          ],
+          "confidence": 0.4288451373577118,
+          "centroid": [
+            147,
+            524
+          ],
+          "counted": false,
+          "fingerprint": "car_2.2_11.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 205,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            263,
+            463,
+            365,
+            528
+          ],
+          "confidence": 0.6178444027900696,
+          "centroid": [
+            314,
+            495
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_6.6_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            511,
+            77,
+            585
+          ],
+          "confidence": 0.46424078941345215,
+          "centroid": [
+            38,
+            548
+          ],
+          "counted": false,
+          "fingerprint": "car_1.0_5.7_0.3"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            67,
+            484,
+            257,
+            565
+          ],
+          "confidence": 0.41680431365966797,
+          "centroid": [
+            162,
+            524
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_15.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 206,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            279,
+            457,
+            374,
+            526
+          ],
+          "confidence": 0.5913482308387756,
+          "centroid": [
+            326,
+            491
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.6_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            512,
+            78,
+            584
+          ],
+          "confidence": 0.4729265868663788,
+          "centroid": [
+            39,
+            548
+          ],
+          "counted": false,
+          "fingerprint": "car_1.1_5.6_0.3"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            85,
+            482,
+            251,
+            557
+          ],
+          "confidence": 0.4515393078327179,
+          "centroid": [
+            168,
+            519
+          ],
+          "counted": false,
+          "fingerprint": "car_2.2_12.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 207,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            279,
+            453,
+            392,
+            525
+          ],
+          "confidence": 0.4637789726257324,
+          "centroid": [
+            335,
+            489
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_8.1_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            100,
+            482,
+            258,
+            553
+          ],
+          "confidence": 0.4494236707687378,
+          "centroid": [
+            179,
+            517
+          ],
+          "counted": false,
+          "fingerprint": "car_2.2_11.2_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 208,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            123,
+            480,
+            266,
+            553
+          ],
+          "confidence": 0.4032555818557739,
+          "centroid": [
+            194,
+            516
+          ],
+          "counted": false,
+          "fingerprint": "car_2.0_10.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 209,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            319,
+            452,
+            406,
+            521
+          ],
+          "confidence": 0.5636368989944458,
+          "centroid": [
+            362,
+            486
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_6.0_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            119,
+            476,
+            281,
+            549
+          ],
+          "confidence": 0.5553303360939026,
+          "centroid": [
+            200,
+            512
+          ],
+          "counted": false,
+          "fingerprint": "car_2.2_11.8_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            0,
+            501,
+            125,
+            574
+          ],
+          "confidence": 0.416119784116745,
+          "centroid": [
+            62,
+            537
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_9.1_0.2"
+        },
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2054,
+            1946,
+            2378,
+            2142
+          ],
+          "confidence": 0.4052816927433014,
+          "centroid": [
+            2216,
+            2044
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.7_63.5_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 210,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            132,
+            477,
+            286,
+            549
+          ],
+          "confidence": 0.4073741137981415,
+          "centroid": [
+            209,
+            513
+          ],
+          "counted": false,
+          "fingerprint": "car_2.1_11.1_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 211,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2064,
+            1951,
+            2390,
+            2140
+          ],
+          "confidence": 0.42676517367362976,
+          "centroid": [
+            2227,
+            2045
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.7_61.6_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 212,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            335,
+            445,
+            435,
+            518
+          ],
+          "confidence": 0.47000205516815186,
+          "centroid": [
+            385,
+            481
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_7.3_0.2"
+        },
+        {
+          "id": "9",
+          "type": "car",
+          "bbox": [
+            1242,
+            444,
+            1354,
+            527
+          ],
+          "confidence": 0.41907426714897156,
+          "centroid": [
+            1298,
+            485
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_9.3_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            160,
+            468,
+            315,
+            546
+          ],
+          "confidence": 0.4063897132873535,
+          "centroid": [
+            237,
+            507
+          ],
+          "counted": false,
+          "fingerprint": "car_2.0_12.1_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 213,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            360,
+            440,
+            451,
+            506
+          ],
+          "confidence": 0.6493129134178162,
+          "centroid": [
+            405,
+            473
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.0_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            164,
+            473,
+            335,
+            544
+          ],
+          "confidence": 0.5305896997451782,
+          "centroid": [
+            249,
+            508
+          ],
+          "counted": false,
+          "fingerprint": "car_2.4_12.1_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            6,
+            499,
+            173,
+            568
+          ],
+          "confidence": 0.5241217613220215,
+          "centroid": [
+            89,
+            533
+          ],
+          "counted": false,
+          "fingerprint": "car_2.4_11.5_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 214,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            365,
+            438,
+            460,
+            508
+          ],
+          "confidence": 0.6850425601005554,
+          "centroid": [
+            412,
+            473
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 215,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            379,
+            442,
+            477,
+            511
+          ],
+          "confidence": 0.6448612809181213,
+          "centroid": [
+            428,
+            476
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.8_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 216,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            385,
+            438,
+            482,
+            505
+          ],
+          "confidence": 0.4384799897670746,
+          "centroid": [
+            433,
+            471
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.5_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 217,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            400,
+            437,
+            493,
+            503
+          ],
+          "confidence": 0.5297465920448303,
+          "centroid": [
+            446,
+            470
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.1_0.2"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2108,
+            1966,
+            2432,
+            2147
+          ],
+          "confidence": 0.4284089207649231,
+          "centroid": [
+            2270,
+            2056
+          ],
+          "counted": true,
+          "fingerprint": "car_1.8_58.6_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 218,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            408,
+            437,
+            503,
+            504
+          ],
+          "confidence": 0.6524037718772888,
+          "centroid": [
+            455,
+            470
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 219,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2113,
+            1971,
+            2449,
+            2148
+          ],
+          "confidence": 0.4478289484977722,
+          "centroid": [
+            2281,
+            2059
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_59.5_1.0"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            76,
+            486,
+            233,
+            554
+          ],
+          "confidence": 0.43369972705841064,
+          "centroid": [
+            154,
+            520
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_10.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 220,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            433,
+            431,
+            525,
+            496
+          ],
+          "confidence": 0.6573371291160583,
+          "centroid": [
+            479,
+            463
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.0_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 221,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            442,
+            431,
+            531,
+            500
+          ],
+          "confidence": 0.511917769908905,
+          "centroid": [
+            486,
+            465
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_6.1_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 222,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2131,
+            1977,
+            2463,
+            2150
+          ],
+          "confidence": 0.4755367934703827,
+          "centroid": [
+            2297,
+            2063
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_57.4_1.0"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            114,
+            478,
+            279,
+            547
+          ],
+          "confidence": 0.41702136397361755,
+          "centroid": [
+            196,
+            512
+          ],
+          "counted": false,
+          "fingerprint": "car_2.4_11.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 223,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            109,
+            477,
+            297,
+            548
+          ],
+          "confidence": 0.42833390831947327,
+          "centroid": [
+            203,
+            512
+          ],
+          "counted": false,
+          "fingerprint": "car_2.6_13.3_0.2"
+        },
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2517,
+            1900,
+            2768,
+            2119
+          ],
+          "confidence": 0.40053194761276245,
+          "centroid": [
+            2642,
+            2009
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.1_55.0_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 224,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            117,
+            476,
+            295,
+            543
+          ],
+          "confidence": 0.460879921913147,
+          "centroid": [
+            206,
+            509
+          ],
+          "counted": false,
+          "fingerprint": "car_2.7_11.9_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            287,
+            448,
+            451,
+            518
+          ],
+          "confidence": 0.432145893573761,
+          "centroid": [
+            369,
+            483
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_11.5_0.2"
+        },
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2525,
+            1903,
+            2776,
+            2120
+          ],
+          "confidence": 0.42767006158828735,
+          "centroid": [
+            2650,
+            2011
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.2_54.5_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 225,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 226,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "9",
+          "type": "car",
+          "bbox": [
+            1307,
+            409,
+            1446,
+            494
+          ],
+          "confidence": 0.44604596495628357,
+          "centroid": [
+            1376,
+            451
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_11.8_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 227,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "9",
+          "type": "car",
+          "bbox": [
+            1315,
+            409,
+            1463,
+            495
+          ],
+          "confidence": 0.4422430098056793,
+          "centroid": [
+            1389,
+            452
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_12.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 228,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2549,
+            1908,
+            2793,
+            2131
+          ],
+          "confidence": 0.5381709337234497,
+          "centroid": [
+            2671,
+            2019
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.1_54.4_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 229,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 230,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            515,
+            420,
+            623,
+            489
+          ],
+          "confidence": 0.433940589427948,
+          "centroid": [
+            569,
+            454
+          ],
+          "counted": false,
+          "fingerprint": "car_1.6_7.5_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 231,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            536,
+            418,
+            629,
+            486
+          ],
+          "confidence": 0.4544100761413574,
+          "centroid": [
+            582,
+            452
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.3_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            357,
+            435,
+            511,
+            511
+          ],
+          "confidence": 0.4485855996608734,
+          "centroid": [
+            434,
+            473
+          ],
+          "counted": false,
+          "fingerprint": "car_2.0_11.7_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            197,
+            459,
+            363,
+            530
+          ],
+          "confidence": 0.4333028495311737,
+          "centroid": [
+            280,
+            494
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_11.8_0.2"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            653,
+            400,
+            780,
+            474
+          ],
+          "confidence": 0.40623822808265686,
+          "centroid": [
+            716,
+            437
+          ],
+          "counted": false,
+          "fingerprint": "car_1.7_9.4_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 232,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 233,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 234,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            562,
+            416,
+            652,
+            482
+          ],
+          "confidence": 0.4497811794281006,
+          "centroid": [
+            607,
+            449
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_5.9_0.2"
+        },
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2572,
+            1915,
+            2822,
+            2131
+          ],
+          "confidence": 0.416014164686203,
+          "centroid": [
+            2697,
+            2023
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.2_54.0_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 235,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            566,
+            411,
+            665,
+            478
+          ],
+          "confidence": 0.48432523012161255,
+          "centroid": [
+            615,
+            444
+          ],
+          "counted": false,
+          "fingerprint": "car_1.5_6.6_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 236,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2199,
+            1984,
+            2533,
+            2155
+          ],
+          "confidence": 0.4400911033153534,
+          "centroid": [
+            2366,
+            2069
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_57.1_1.0"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            577,
+            407,
+            664,
+            476
+          ],
+          "confidence": 0.4355533719062805,
+          "centroid": [
+            620,
+            441
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_6.0_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 237,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            576,
+            407,
+            675,
+            474
+          ],
+          "confidence": 0.4699518084526062,
+          "centroid": [
+            625,
+            440
+          ],
+          "counted": false,
+          "fingerprint": "car_1.5_6.6_0.2"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2204,
+            1983,
+            2534,
+            2156
+          ],
+          "confidence": 0.4510563015937805,
+          "centroid": [
+            2369,
+            2069
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_57.1_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 238,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2203,
+            1988,
+            2535,
+            2158
+          ],
+          "confidence": 0.5075893402099609,
+          "centroid": [
+            2369,
+            2073
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_56.4_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 239,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2207,
+            1985,
+            2543,
+            2158
+          ],
+          "confidence": 0.48043960332870483,
+          "centroid": [
+            2375,
+            2071
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_58.1_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 240,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 241,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            607,
+            404,
+            696,
+            471
+          ],
+          "confidence": 0.47478169202804565,
+          "centroid": [
+            651,
+            437
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_6.0_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 242,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            609,
+            403,
+            705,
+            472
+          ],
+          "confidence": 0.5580178499221802,
+          "centroid": [
+            657,
+            437
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_6.6_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 243,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2220,
+            1986,
+            2554,
+            2158
+          ],
+          "confidence": 0.40407291054725647,
+          "centroid": [
+            2387,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_57.4_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 244,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2220,
+            1987,
+            2557,
+            2156
+          ],
+          "confidence": 0.5840478539466858,
+          "centroid": [
+            2388,
+            2071
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_57.0_1.0"
+        },
+        {
+          "id": "9",
+          "type": "car",
+          "bbox": [
+            1366,
+            377,
+            1465,
+            450
+          ],
+          "confidence": 0.41529160737991333,
+          "centroid": [
+            1415,
+            413
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_7.2_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 245,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2221,
+            1987,
+            2558,
+            2158
+          ],
+          "confidence": 0.5443686842918396,
+          "centroid": [
+            2389,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_57.6_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 246,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2226,
+            1991,
+            2557,
+            2157
+          ],
+          "confidence": 0.6606431007385254,
+          "centroid": [
+            2391,
+            2074
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_54.9_1.0"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            284,
+            439,
+            466,
+            509
+          ],
+          "confidence": 0.4870736300945282,
+          "centroid": [
+            375,
+            474
+          ],
+          "counted": false,
+          "fingerprint": "car_2.6_12.7_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 247,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            308,
+            438,
+            465,
+            505
+          ],
+          "confidence": 0.5166515707969666,
+          "centroid": [
+            386,
+            471
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_10.5_0.2"
+        },
+        {
+          "id": "9",
+          "type": "car",
+          "bbox": [
+            1365,
+            369,
+            1528,
+            456
+          ],
+          "confidence": 0.4767162501811981,
+          "centroid": [
+            1446,
+            412
+          ],
+          "counted": false,
+          "fingerprint": "car_1.9_14.2_0.2"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2225,
+            1983,
+            2562,
+            2157
+          ],
+          "confidence": 0.4626316726207733,
+          "centroid": [
+            2393,
+            2070
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_58.6_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 248,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            311,
+            438,
+            467,
+            505
+          ],
+          "confidence": 0.48704224824905396,
+          "centroid": [
+            389,
+            471
+          ],
+          "counted": false,
+          "fingerprint": "car_2.3_10.5_0.2"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2227,
+            1987,
+            2563,
+            2157
+          ],
+          "confidence": 0.4470079243183136,
+          "centroid": [
+            2395,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_57.1_1.0"
+        },
+        {
+          "id": "8",
+          "type": "motorcycle",
+          "bbox": [
+            2620,
+            1933,
+            2872,
+            2146
+          ],
+          "confidence": 0.40767279267311096,
+          "centroid": [
+            2746,
+            2039
+          ],
+          "counted": true,
+          "fingerprint": "motorcycle_1.2_53.7_0.9"
+        }
+      ]
+    },
+    {
+      "frame_number": 249,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2228,
+            1988,
+            2565,
+            2157
+          ],
+          "confidence": 0.5052508115768433,
+          "centroid": [
+            2396,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_57.0_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 250,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2231,
+            1988,
+            2566,
+            2156
+          ],
+          "confidence": 0.49721041321754456,
+          "centroid": [
+            2398,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_56.3_1.0"
+        },
+        {
+          "id": "9",
+          "type": "car",
+          "bbox": [
+            1365,
+            368,
+            1522,
+            450
+          ],
+          "confidence": 0.42914605140686035,
+          "centroid": [
+            1443,
+            409
+          ],
+          "counted": false,
+          "fingerprint": "car_1.9_12.9_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 251,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2232,
+            1988,
+            2566,
+            2156
+          ],
+          "confidence": 0.4241708815097809,
+          "centroid": [
+            2399,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_56.1_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 252,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2234,
+            1988,
+            2566,
+            2156
+          ],
+          "confidence": 0.4305817782878876,
+          "centroid": [
+            2400,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_55.8_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 253,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": []
+    },
+    {
+      "frame_number": 254,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2235,
+            1990,
+            2566,
+            2156
+          ],
+          "confidence": 0.41353464126586914,
+          "centroid": [
+            2400,
+            2073
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_54.9_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 255,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2236,
+            1988,
+            2564,
+            2157
+          ],
+          "confidence": 0.4537469148635864,
+          "centroid": [
+            2400,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_55.4_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 256,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            654,
+            393,
+            743,
+            458
+          ],
+          "confidence": 0.4840931296348572,
+          "centroid": [
+            698,
+            425
+          ],
+          "counted": false,
+          "fingerprint": "car_1.4_5.8_0.2"
+        },
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2237,
+            1988,
+            2564,
+            2156
+          ],
+          "confidence": 0.48350095748901367,
+          "centroid": [
+            2400,
+            2072
+          ],
+          "counted": true,
+          "fingerprint": "car_1.9_54.9_1.0"
+        }
+      ]
+    },
+    {
+      "frame_number": 257,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2233,
+            1992,
+            2566,
+            2156
+          ],
+          "confidence": 0.49777406454086304,
+          "centroid": [
+            2399,
+            2074
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_54.6_1.0"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            658,
+            392,
+            742,
+            457
+          ],
+          "confidence": 0.4906803369522095,
+          "centroid": [
+            700,
+            424
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_5.5_0.2"
+        }
+      ]
+    },
+    {
+      "frame_number": 258,
+      "counts": {
+        "car": 0,
+        "motorcycle": 0,
+        "bus": 0,
+        "truck": 0
+      },
+      "tracked_objects": [
+        {
+          "id": "5",
+          "type": "car",
+          "bbox": [
+            2233,
+            1990,
+            2566,
+            2156
+          ],
+          "confidence": 0.48731091618537903,
+          "centroid": [
+            2399,
+            2073
+          ],
+          "counted": true,
+          "fingerprint": "car_2.0_55.3_1.0"
+        },
+        {
+          "id": "7",
+          "type": "car",
+          "bbox": [
+            657,
+            393,
+            742,
+            458
+          ],
+          "confidence": 0.481405109167099,
+          "centroid": [
+            699,
+            425
+          ],
+          "counted": false,
+          "fingerprint": "car_1.3_5.5_0.2"
+        }
+      ]
+    }
+  ],
+  "unique_vehicles": {
+    "car": 5,
+    "motorcycle": 2,
+    "bus": 0,
+    "truck": 2
+  },
+  "counted_vehicles": {
+    "car": 2,
+    "motorcycle": 2,
+    "bus": 0,
+    "truck": 1
+  },
+  "counting_line": {
+    "description": "Objects counted when they cross this line from top to bottom",
+    "y_position_percentage": 0.6
+  },
+  "debug_info": {
+    "detection_parameters": {
+      "confidence_threshold": 0.4,
+      "min_size_percentage": 0.03,
+      "tracking_method": "IoU + Distance with Duplicate Filtering",
+      "iou_threshold": 0.5,
+      "duplicate_detection_threshold": 0.5,
+      "distance_threshold_factor": 0.15,
+      "track_lifespan": 30,
+      "unique_counting": "Multiple methods: track_id+type signature, object fingerprint, minimum frames between counts",
+      "min_frames_between_counts": 10
+    },
+    "stability": {
+      "avg_detections_per_frame": 0.7027027027027027,
+      "max_detections": 4,
+      "min_detections": 0,
+      "detection_variance": 0.7803401857455912
+    }
+  },
+  "processing_stats": {
+    "processed_frames": 259,
+    "total_frames": 546,
+    "processing_time_seconds": 106.46869492530823,
+    "frames_per_second": 2.4326399434284247,
+    "vehicle_density": 0.03474903474903475,
+    "total_vehicles_counted": 5,
+    "counting_method": "Line crossing (bottom 60% of frame)"
+  }
+}

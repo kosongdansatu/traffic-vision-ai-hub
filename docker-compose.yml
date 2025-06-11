@@ -1,45 +1,116 @@
-version: '3.8'
+version: "3.8"
+
+networks:
+  traffic-vision-network:
+    driver: bridge
 
 services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    container_name: traffic-vision-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: traffic_vision
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - traffic-vision-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # FastAPI Backend
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: traffic-vision-backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
-      - ./backend/models:/app/models
-      - ./backend/uploads:/app/uploads
-      - ./backend/results:/app/results
+      # Production volumes (persistent data only)
+      - backend_uploads:/app/uploads
+      - backend_results:/app/results
+      - backend_models:/app/models
+      - backend_logs:/app/logs
+      # Development volumes (uncomment for development)
+      # - ./backend:/app
     environment:
-      - DATABASE_URL=sqlite:///./app.db
-      - SECRET_KEY=a_very_secret_key_for_jwt_tokens
+      - DATABASE_URL=postgresql://postgres:${DB_PASSWORD:-postgres123}@database:5432/traffic_vision
+      - SECRET_KEY=${SECRET_KEY:-09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7}
       - ALGORITHM=HS256
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    restart: unless-stopped
+      - PYTHONPATH=/app
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - traffic-vision-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # React Frontend
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.frontend
     container_name: traffic-vision-frontend
+    restart: unless-stopped
     ports:
-      - "3000:3000"
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      - "3000:80"
     environment:
-      - NODE_ENV=development
       - VITE_API_URL=http://localhost:8000
     depends_on:
-      - backend
-    command: npm run dev -- --host --port 3000
+      backend:
+        condition: service_healthy
+    networks:
+      - traffic-vision-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis (Optional - for caching and session management)
+  redis:
+    image: redis:7-alpine
+    container_name: traffic-vision-redis
     restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - traffic-vision-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  backend_results:
+    driver: local
+  backend_models:
+    driver: local
+  backend_logs:
+    driver: local
+  redis_data:
+    driver: local

@@ -27,7 +27,7 @@ docker-compose up -d
 ```
 
 This will start all services and make the application available at:
-- Frontend: http://localhost:5173
+- Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
 

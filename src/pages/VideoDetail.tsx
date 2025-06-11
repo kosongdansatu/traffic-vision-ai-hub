@@ -308,21 +308,21 @@ const VideoDetail = () => {
                     <div className="mt-4 border-t pt-4">
                       <h3 className="font-medium mb-2">Detection Stability</h3>
                       <div className="grid grid-cols-4 gap-2">
-                        <div className="bg-gray-100 p-3 rounded">
-                          <div className="text-sm text-muted-foreground">Avg Detections</div>
-                          <div className="text-xl font-bold">{results.debug_info.stability.avg_detections_per_frame?.toFixed(1)}</div>
+                        <div className="bg-blue-100 dark:bg-blue-950 p-3 rounded shadow-sm">
+                          <div className="text-sm font-medium text-blue-800 dark:text-blue-300">Avg Detections</div>
+                          <div className="text-xl font-bold text-blue-900 dark:text-white">{results.debug_info.stability.avg_detections_per_frame?.toFixed(1)}</div>
                         </div>
-                        <div className="bg-gray-100 p-3 rounded">
-                          <div className="text-sm text-muted-foreground">Min</div>
-                          <div className="text-xl font-bold">{results.debug_info.stability.min_detections}</div>
+                        <div className="bg-green-100 dark:bg-green-950 p-3 rounded shadow-sm">
+                          <div className="text-sm font-medium text-green-800 dark:text-green-300">Min</div>
+                          <div className="text-xl font-bold text-green-900 dark:text-white">{results.debug_info.stability.min_detections}</div>
                         </div>
-                        <div className="bg-gray-100 p-3 rounded">
-                          <div className="text-sm text-muted-foreground">Max</div>
-                          <div className="text-xl font-bold">{results.debug_info.stability.max_detections}</div>
+                        <div className="bg-purple-100 dark:bg-purple-950 p-3 rounded shadow-sm">
+                          <div className="text-sm font-medium text-purple-800 dark:text-purple-300">Max</div>
+                          <div className="text-xl font-bold text-purple-900 dark:text-white">{results.debug_info.stability.max_detections}</div>
                         </div>
-                        <div className="bg-gray-100 p-3 rounded">
-                          <div className="text-sm text-muted-foreground">Variance</div>
-                          <div className="text-xl font-bold">{results.debug_info.stability.detection_variance?.toFixed(1)}</div>
+                        <div className="bg-amber-100 dark:bg-amber-950 p-3 rounded shadow-sm">
+                          <div className="text-sm font-medium text-amber-800 dark:text-amber-300">Variance</div>
+                          <div className="text-xl font-bold text-amber-900 dark:text-white">{results.debug_info.stability.detection_variance?.toFixed(1)}</div>
                         </div>
                       </div>
                     </div>

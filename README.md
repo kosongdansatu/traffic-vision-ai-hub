@@ -62,7 +62,7 @@ docker-compose up -d
 ```
 
 5. Akses aplikasi di browser:
-   - Frontend: http://localhost:5173 (saat menggunakan docker-compose) atau http://localhost:3000 (saat menjalankan langsung dengan npm)
+   - Frontend: http://localhost:3000 (saat menjalankan langsung dengan npm)
    - API Backend: http://localhost:8000
    - Dokumentasi API: http://localhost:8000/docs
 
